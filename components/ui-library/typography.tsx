@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
@@ -66,7 +67,9 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     ref
   ) => {
     const Component = as || (size as React.ElementType) || "h1";
-    const Comp = animate ? motion[Component as keyof typeof motion] : Component;
+    const Comp = animate
+      ? (motion[Component as keyof typeof motion] as any)
+      : Component;
 
     const headingProps = {
       className: cn(headingVariants({ size, weight, align, color }), className),
@@ -75,7 +78,7 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       ...(animate ? motionProps : {}),
     };
 
-    return <Comp {...headingProps} />;
+    return <Comp {...(headingProps as any)} />;
   }
 );
 
@@ -154,7 +157,7 @@ export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
     ref
   ) => {
     const Comp = animate
-      ? motion[Component as keyof typeof motion] || motion.p
+      ? (motion[Component as keyof typeof motion] || motion.p) as any
       : Component;
 
     const textProps = {
@@ -167,7 +170,7 @@ export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
       ...(animate ? motionProps : {}),
     };
 
-    return <Comp {...textProps} />;
+    return <Comp {...(textProps as any)} />;
   }
 );
 

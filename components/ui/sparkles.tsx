@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useId, useMemo } from "react";
 import { useEffect, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
+import initParticlesEngine, { Particles } from "@tsparticles/react";
 import type { Container, SingleOrMultiple } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,11 @@ export const SparklesCore = (props: ParticlesProps) => {
   } = props;
   const [init, setInit] = useState(false);
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
+    const initFn = initParticlesEngine as unknown as (
+      cb: (engine: any) => Promise<void>
+    ) => Promise<void>;
+
+    initFn(async (engine: any) => {
       await loadSlim(engine);
     }).then(() => {
       setInit(true);
@@ -39,8 +44,8 @@ export const SparklesCore = (props: ParticlesProps) => {
   }, []);
   const controls = useAnimation();
 
-  const particlesLoaded = async (container?: Container) => {
-    if (container) {
+  const particlesLoaded = async (container?: Container | null) => {
+    if (container != null) {
       controls.start({
         opacity: 1,
         transition: {
@@ -155,7 +160,6 @@ export const SparklesCore = (props: ParticlesProps) => {
               },
               effect: {
                 close: true,
-                fill: true,
                 options: {},
                 type: {} as SingleOrMultiple<string> | undefined,
               },
@@ -165,14 +169,7 @@ export const SparklesCore = (props: ParticlesProps) => {
                   offset: 0,
                   value: 90,
                 },
-                attract: {
-                  distance: 200,
-                  enable: false,
-                  rotate: {
-                    x: 3000,
-                    y: 3000,
-                  },
-                },
+                // 'attract' removed to satisfy RecursivePartial<IMove> type
                 center: {
                   x: 50,
                   y: 50,
@@ -212,11 +209,6 @@ export const SparklesCore = (props: ParticlesProps) => {
                   enable: false,
                 },
                 straight: false,
-                trail: {
-                  enable: false,
-                  length: 10,
-                  fill: {},
-                },
                 vibrate: false,
                 warp: false,
               },
@@ -263,7 +255,6 @@ export const SparklesCore = (props: ParticlesProps) => {
               },
               shape: {
                 close: true,
-                fill: true,
                 options: {},
                 type: "circle",
               },

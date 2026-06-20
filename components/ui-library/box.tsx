@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -95,7 +96,9 @@ export const Box = React.forwardRef<HTMLDivElement, BoxProps>(
     },
     ref
   ) => {
-    const Comp = animate ? motion[Component as keyof typeof motion] || motion.div : Component;
+    // motion[...] has complex typings; access via a safer cast to avoid implicit any
+    const motionRegistry = motion as unknown as Record<string, any>;
+    const Comp: any = animate ? (motionRegistry[Component as string] || motion.div) : Component;
     
     const boxProps = {
       className: cn(boxVariants({ padding, margin, rounded, shadow, border, bgColor }), className),

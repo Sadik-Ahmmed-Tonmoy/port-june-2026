@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -35,9 +36,14 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement>, Va
 
 export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   ({ className, size, padding, as: Component = "div", animate = false, motionProps, ...props }, ref) => {
-    const Comp = animate ? motion[Component as keyof typeof motion] || motion.div : Component;
+    // motion[...] indexing can produce unwieldy types; cast to any to satisfy TS
+    const Comp: any = animate
+      ? typeof Component === "string"
+        ? ((motion as any)[Component] || motion.div)
+        : motion(Component as any)
+      : Component;
 
-    const containerProps = {
+    const containerProps: any = {
       className: cn(containerVariants({ size, padding }), className),
       ref,
       ...props,

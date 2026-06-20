@@ -62,7 +62,9 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement>, Variant
 
 export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
   ({ className, direction, align, justify, wrap, gap, as: Component = "div", animate = false, motionProps, ...props }, ref) => {
-    const Comp = animate ? motion[Component as keyof typeof motion] || motion.div : Component;
+    const Comp: React.ElementType = animate
+      ? ((motion[Component as keyof typeof motion] || motion.div) as React.ElementType)
+      : Component;
 
     const flexProps = {
       className: cn(flexVariants({ direction, align, justify, wrap, gap }), className),
@@ -71,7 +73,7 @@ export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
       ...(animate ? motionProps : {}),
     };
 
-    return <Comp {...flexProps} />;
+    return React.createElement(Comp, flexProps);
   }
 );
 

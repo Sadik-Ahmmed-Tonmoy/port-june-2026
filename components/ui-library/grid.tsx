@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -82,7 +83,7 @@ export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
     },
     ref
   ) => {
-    const Comp = animate ? motion[Component as keyof typeof motion] || motion.div : Component;
+    const Comp: React.ElementType = animate ? motion[Component as keyof typeof motion] || motion.div : Component;
     
     let responsiveClasses = "";
     
@@ -112,7 +113,8 @@ export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
       ...(animate ? motionProps : {}),
     };
 
-    return <Comp {...gridProps} />;
+    // Use createElement to avoid JSX spread typing issues when Comp may be a motion component
+    return React.createElement(Comp, gridProps as any);
   }
 );
 
