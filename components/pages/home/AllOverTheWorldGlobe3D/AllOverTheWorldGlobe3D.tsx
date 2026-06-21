@@ -1,5 +1,6 @@
 "use client";
 import { Globe3D, GlobeMarker } from "@/components/ui/3d-globe";
+import { StaggerTestimonials } from "../StaggerTestimonials/StaggerTestimonials";
 
 // Personalised markers – focus on your home base and key global tech hubs
 const markers: GlobeMarker[] = [
@@ -121,52 +122,56 @@ const markers: GlobeMarker[] = [
 
 export function PortfolioGlobe() {
   return (
-    <div className="relative mx-auto w-full  overflow-hidden rounded-xl bg-white shadow-sm ring-1 shadow-black/10 ring-black/10 dark:bg-neutral-950 ">
-      <div className="relative z-10 p-4 md:p-12">
-        <h2 className="mb-4 max-w-2xl text-2xl font-extrabold tracking-tight text-balance text-neutral-900 md:text-5xl lg:text-6xl dark:text-white">
-          Building solutions that connect the world.
-        </h2>
-        <p className="mt-2 max-w-lg text-balance text-neutral-600 md:mt-8 md:text-lg dark:text-neutral-400">
-          From Dhaka to the globe – I craft full‑stack applications that serve
-          real users, with performance and scalability at heart.
-        </p>
+    <div className=" mx-auto w-full  overflow-hidden rounded-xl bg-white shadow-sm ring-1 shadow-black/10 ring-black/10 dark:bg-neutral-950">
+      <div className="relative container mx-auto ">
+        <div className="relative z-10 p-4 md:p-12">
+          <h2 className="mb-4 max-w-2xl text-2xl font-extrabold tracking-tight text-balance text-neutral-900 md:text-5xl lg:text-6xl dark:text-white">
+            Building solutions that connect the world.
+          </h2>
+          <p className="mt-2 max-w-lg text-balance text-neutral-600 md:mt-8 md:text-lg dark:text-neutral-400">
+            From Dhaka to the globe – I craft full‑stack applications that serve
+            real users, with performance and scalability at heart.
+          </p>
 
-        <div className="mt-4 flex flex-wrap gap-4 md:mt-8">
-          <a
-            href="#projects"
-            className="flex cursor-pointer items-center justify-center rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white shadow-[0px_0px_10px_0px_rgba(255,255,255,0.2)_inset] ring ring-white/20 ring-offset-2 ring-offset-neutral-900 transition-all duration-200 ring-inset hover:shadow-[0px_0px_20px_0px_rgba(255,255,255,0.4)_inset] hover:ring-white/40 active:scale-98"
-          >
-            View My Projects
-          </a>
-          <a
-            href="#contact"
-            className="flex cursor-pointer items-center justify-center rounded-lg bg-white px-4 py-2 font-medium text-neutral-900 ring ring-neutral-200 transition-all duration-200 ring-inset hover:bg-neutral-50 hover:ring-neutral-300 active:scale-98"
-          >
-            Get in Touch
-          </a>
+          <div className="mt-4 flex flex-wrap gap-4 md:mt-8">
+            <a
+              href="#projects"
+              className="flex cursor-pointer items-center justify-center rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white shadow-[0px_0px_10px_0px_rgba(255,255,255,0.2)_inset] ring ring-white/20 ring-offset-2 ring-offset-neutral-900 transition-all duration-200 ring-inset hover:shadow-[0px_0px_20px_0px_rgba(255,255,255,0.4)_inset] hover:ring-white/40 active:scale-98"
+            >
+              View My Projects
+            </a>
+            <a
+              href="#contact"
+              className="flex cursor-pointer items-center justify-center rounded-lg bg-white px-4 py-2 font-medium text-neutral-900 ring ring-neutral-200 transition-all duration-200 ring-inset hover:bg-neutral-50 hover:ring-neutral-300 active:scale-98"
+            >
+              Get in Touch
+            </a>
+          </div>
+        </div>
+
+        {/* Globe container – repositioned for better responsiveness */}
+        <div className="absolute right-0 bottom-0 z-10 size-140 md:-right-10 md:-bottom-80 md:size-180 ">
+          <Globe3D
+            markers={markers}
+            config={{
+              atmosphereColor: "#4da6ff",
+              atmosphereIntensity: 20,
+              bumpScale: 5,
+              autoRotateSpeed: 0.3,
+            }}
+            onMarkerClick={(marker) => {
+              console.log("Clicked:", marker.label);
+            }}
+            onMarkerHover={(marker) => {
+              if (marker) {
+                console.log("Hovering:", marker.label);
+              }
+            }}
+            className="hover:cursor-pointer"
+          />
         </div>
       </div>
-
-      {/* Globe container – repositioned for better responsiveness */}
-      <div className="absolute right-0 bottom-0 z-10 size-140 md:right-10 md:-bottom-80 md:size-180 ">
-        <Globe3D
-          markers={markers}
-          config={{
-            atmosphereColor: "#4da6ff",
-            atmosphereIntensity: 20,
-            bumpScale: 5,
-            autoRotateSpeed: 0.3,
-          }}
-          onMarkerClick={(marker) => {
-            console.log("Clicked:", marker.label);
-          }}
-          onMarkerHover={(marker) => {
-            if (marker) {
-              console.log("Hovering:", marker.label);
-            }
-          }}
-        />
-      </div>
+      <StaggerTestimonials />
     </div>
   );
 }

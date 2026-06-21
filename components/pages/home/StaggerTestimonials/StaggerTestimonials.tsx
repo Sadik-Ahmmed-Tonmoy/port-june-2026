@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const SQRT_5000 = Math.sqrt(5000);
 
-// ─── Personalised testimonials (same as before) ────────────────────────
 const testimonials = [
   {
     tempId: 0,
@@ -50,7 +49,29 @@ const testimonials = [
     by: "Sarah K., Senior Engineer at Wizard Software",
     imgSrc: "https://i.pravatar.cc/150?img=6",
   },
+  {
+    tempId: 6,
+    testimonial:
+      "Sadik was a pleasure to work with. He delivered a high-quality product that exceeded our expectations. We look forward to working with him again.",
+    by: "Ali A., CTO at Aceternity",
+    imgSrc: "https://i.pravatar.cc/150?img=7",
+  },
+  {
+    tempId: 7,
+    testimonial:
+      "Sadik is a true expert in web development. He consistently delivers high-quality code that meets our needs. I highly recommend him for any web development project.",
+    by: "John D., CEO at WebTech Solutions",
+    imgSrc: "https://i.pravatar.cc/150?img=8",
+  },
+  {
+    tempId: 8,
+    testimonial:
+      "Sadik is a talented developer with a keen eye for detail. He delivered a stunning website that exceeded our expectations. We're thrilled to have worked with him.",
+    by: "Jane S., Marketing Manager at Tech Solutions",
+    imgSrc: "https://i.pravatar.cc/150?img=9",
+  },
 ];
+
 
 interface TestimonialCardProps {
   position: number;
@@ -66,6 +87,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
   cardSize,
 }) => {
   const isCenter = position === 0;
+  const step = cardSize * 0.65; // spacing factor – adjust to control overlap
 
   return (
     <div
@@ -82,7 +104,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         clipPath: `polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)`,
         transform: `
           translate(-50%, -50%)
-          translateX(${(cardSize / 1.5) * position}px)
+          translateX(${step * position}px)
           translateY(${isCenter ? -65 : position % 2 ? 15 : -15}px)
           rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)
         `,
@@ -104,9 +126,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         src={testimonial.imgSrc}
         alt={`${testimonial.by.split(',')[0]}`}
         className="mb-4 h-14 w-12 bg-muted object-cover object-top"
-        style={{
-          boxShadow: "3px 3px 0px hsl(var(--background))",
-        }}
+        style={{ boxShadow: "3px 3px 0px hsl(var(--background))" }}
       />
       <h3
         className={cn(
@@ -131,37 +151,69 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 export interface StaggerTestimonialsProps {
   autoplay?: boolean;
   autoplaySpeed?: number;
+  visibleCards?: number; // number of cards to show (default 3)
 }
 
 export const StaggerTestimonials: React.FC<StaggerTestimonialsProps> = ({
   autoplay = true,
-  autoplaySpeed = 3000,
+  autoplaySpeed = 2800,
+  visibleCards = 5,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [cardSize, setCardSize] = useState(365);
   const [testimonialsList, setTestimonialsList] = useState(testimonials);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ─── handleMove: shift list by `steps` ───────────────────────────────
-  const handleMove = useCallback((steps: number) => {
-    const newList = [...testimonialsList];
-    if (steps > 0) {
-      for (let i = steps; i > 0; i--) {
-        const item = newList.shift();
-        if (!item) return;
-        newList.push({ ...item, tempId: Math.random() });
-      }
-    } else {
-      for (let i = steps; i < 0; i++) {
-        const item = newList.pop();
-        if (!item) return;
-        newList.unshift({ ...item, tempId: Math.random() });
-      }
-    }
-    setTestimonialsList(newList);
-  }, [testimonialsList]);
+  // ─── Dynamically calculate card size to fit exactly `visibleCards` ──
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      if (!containerRef.current) return;
+      const containerWidth = containerRef.current.offsetWidth;
+      // Allow some padding, and use a factor to control spacing
+      const padding = 32; // total horizontal padding
+      const availableWidth = containerWidth - padding;
+      // Each card takes width, and we want to show `visibleCards` cards with some overlap/gap.
+      // We use a spacing factor: cardSize * 0.65 ≈ 65% of card width as step.
+      // So the total width for 3 cards ≈ cardSize + 2 * cardSize * 0.65 = cardSize * (1 + 1.3) = 2.3 * cardSize.
+      // To fit availableWidth, cardSize = availableWidth / 2.3.
+      // Adjust factor to control overlap – 0.65 gives good overlap.
+      const factor = 0.65;
+      const newSize = Math.min(
+        Math.floor(availableWidth / (1 + (visibleCards - 1) * factor)),
+        400 // max size to avoid too large
+      );
+      setCardSize(Math.max(newSize, 200)); // min size
+    };
 
-  // ─── Autoplay logic ──────────────────────────────────────────────────
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [visibleCards]);
+
+  // ─── handleMove ────────────────────────────────────────────────────────
+  const handleMove = useCallback(
+    (steps: number) => {
+      const newList = [...testimonialsList];
+      if (steps > 0) {
+        for (let i = steps; i > 0; i--) {
+          const item = newList.shift();
+          if (!item) return;
+          newList.push({ ...item, tempId: Math.random() });
+        }
+      } else {
+        for (let i = steps; i < 0; i++) {
+          const item = newList.pop();
+          if (!item) return;
+          newList.unshift({ ...item, tempId: Math.random() });
+        }
+      }
+      setTestimonialsList(newList);
+    },
+    [testimonialsList]
+  );
+
+  // ─── Autoplay ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (!autoplay || isPaused) {
       if (intervalRef.current) {
@@ -183,29 +235,21 @@ export const StaggerTestimonials: React.FC<StaggerTestimonialsProps> = ({
     };
   }, [autoplay, autoplaySpeed, isPaused, handleMove]);
 
-  // ─── Responsive card size ─────────────────────────────────────────────
-  useEffect(() => {
-    const updateSize = () => {
-      const { matches } = window.matchMedia("(min-width: 640px)");
-      setCardSize(matches ? 365 : 290);
-    };
-
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
   return (
     <div
+      ref={containerRef}
       className="relative w-full overflow-hidden bg-muted/30"
       style={{ height: 600 }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       {testimonialsList.map((testimonial, index) => {
-        const position = testimonialsList.length % 2
-          ? index - (testimonialsList.length + 1) / 2
-          : index - testimonialsList.length / 2;
+        // Position relative to the center (0)
+        const position = index - Math.floor(testimonialsList.length / 2);
+        // Only render cards that are within the visible range
+        const halfVisible = Math.floor(visibleCards / 2);
+        if (Math.abs(position) > halfVisible) return null;
+
         return (
           <TestimonialCard
             key={testimonial.tempId}
@@ -216,11 +260,11 @@ export const StaggerTestimonials: React.FC<StaggerTestimonialsProps> = ({
           />
         );
       })}
+
       <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
         <button
           onClick={() => {
             handleMove(-1);
-            // Reset timer after manual click (optional)
             if (intervalRef.current) {
               clearInterval(intervalRef.current);
               intervalRef.current = setInterval(() => {
