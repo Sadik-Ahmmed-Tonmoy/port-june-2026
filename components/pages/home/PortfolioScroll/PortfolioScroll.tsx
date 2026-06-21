@@ -116,7 +116,7 @@ const StickySection = ({
   >
     <GridOverlay />
     <div className="px-8 text-center">
-      <h2 className="text-5xl font-semibold leading-[120%] tracking-tight 2xl:text-7xl">{title}</h2>
+      <div className="text-5xl font-semibold leading-[120%] tracking-tight 2xl:text-7xl">{title}</div>
       {subTitle && <p className="mt-4 text-lg text-neutral-400">{subTitle}</p>}
     </div>
   </section>

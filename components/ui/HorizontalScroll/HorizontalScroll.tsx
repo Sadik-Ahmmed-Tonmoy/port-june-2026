@@ -30,7 +30,7 @@ const SECTIONS_CONFIG: SectionData[] = [
     id: "hero",
     content: (
       <div className="relative h-full w-full overflow-hidden">
-        <Threads amplitude={1} distance={0} enableMouseInteraction />
+        {/* <Threads amplitude={1} distance={0} enableMouseInteraction /> */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
           <SquigglyTextOut />
         </div>
@@ -201,6 +201,14 @@ export default function HorizontalScroll() {
   const context = useContext(ContextProvider);
   if (!context) return null;
 
+
+
+
+
+
+
+
+  
   return (
     <ReactLenis root>
       <main>

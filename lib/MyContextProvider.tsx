@@ -4,33 +4,36 @@ import { createContext, useEffect, useState, ReactNode } from "react";
 
 type TContextProvider = {
   windowWidth: number;
+  isSmallDevice: boolean;
 };
 
 export const ContextProvider = createContext<TContextProvider | null>(null);
 
-const MyContextProvider = ({ children }: { children: ReactNode }) => {
-  // Lazy initialization (no effect needed for initial width)
-  const [windowWidth, setWindowWidth] = useState<number>(() => {
-    if (typeof window !== "undefined") return window.innerWidth;
-    return 0; // fallback for SSR
-  });
+const MyContextProvider = ({ children }: {children: ReactNode}) => {
+  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 0);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window !== "undefined") {
+      const handleWindowResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
 
-    const handleWindowResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+      window.addEventListener("resize", handleWindowResize);
 
-    window.addEventListener("resize", handleWindowResize);
-
-    return () => {
-      window.removeEventListener("resize", handleWindowResize);
-    };
+      return () => {
+        window.removeEventListener("resize", handleWindowResize);
+      };
+    }
   }, []);
 
+
+  const infoProvider: TContextProvider = {
+    windowWidth,
+    isSmallDevice: windowWidth < 1280, // breakpoint for mobile/tablet
+  };
+
   return (
-    <ContextProvider.Provider value={{ windowWidth }}>
+    <ContextProvider.Provider value={infoProvider}>
       {children}
     </ContextProvider.Provider>
   );

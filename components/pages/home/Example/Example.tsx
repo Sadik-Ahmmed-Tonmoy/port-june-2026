@@ -3,6 +3,8 @@
 
 import { useEffect, useRef } from 'react';
 import AnimatedBeamMultipleOutput from '../AnimatedBeamMultipleOutput/AnimatedBeamMultipleOutput';
+import { useIsStrongGPU } from '@/utils/useIsStrongGPU';
+import { useGPUPerformance } from '@/utils/useGPUPerformance';
 
 // ─── Page content ──────────────────────────────────────────────────────
 const pageData = {
@@ -17,6 +19,11 @@ const pageData = {
 
 export default function AnimationPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const isStrongGPU = useIsStrongGPU();
+  const perf = useGPUPerformance();
+
+console.log(isStrongGPU, perf?.tier );
 
   // ─── Load UnicornStudio (keep or replace) ───────────────────────────
   useEffect(() => {

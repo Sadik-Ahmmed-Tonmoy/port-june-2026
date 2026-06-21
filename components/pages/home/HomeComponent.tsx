@@ -29,8 +29,8 @@ const HomeComponent = () => {
      
       <HeroParallaxDemo/>
       
-      <PortfolioScroll/>
       <HorizontalScroll/>
+      <PortfolioScroll/>
       {/* <RollingText/> */}
      
       <RandomizedTextEffect text='Production ready code' />
