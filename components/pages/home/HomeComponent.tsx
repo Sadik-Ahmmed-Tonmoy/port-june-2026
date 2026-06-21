@@ -11,6 +11,7 @@ import { RollingText } from "./RollingText/RollingText";
 import { SquigglyTextOut } from "./SquigglyText/SquigglyText";
 import HeroParallaxDemo from "@/components/hero-parallax-demo";
 import AnimatedBeamMultipleOutput from "./AnimatedBeamMultipleOutput/AnimatedBeamMultipleOutput";
+import { StaggerTestimonials } from "./StaggerTestimonials/StaggerTestimonials";
 
 
 const HomeComponent = () => {
@@ -18,6 +19,7 @@ const HomeComponent = () => {
     <Container >
       <ThemeSwitcher />
       <Banner />
+      <StaggerTestimonials />
       <Example />
       <LoginWithGoogle />
       <PortfolioGlobe/>
