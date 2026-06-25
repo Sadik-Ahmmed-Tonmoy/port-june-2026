@@ -24,7 +24,6 @@ export default function SwiperTest() {
         // pagination={{
         //   clickable: true,
         // }}
-        modules={[Mousewheel, Pagination]}
         navigation={true}
         modules={[Keyboard, Pagination, Navigation,  Mousewheel]}
         className="mySwiper"

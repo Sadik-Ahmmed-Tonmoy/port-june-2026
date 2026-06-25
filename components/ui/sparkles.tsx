@@ -2,8 +2,9 @@
 "use client";
 import React, { useId, useMemo } from "react";
 import { useEffect, useState } from "react";
-import initParticlesEngine, { Particles } from "@tsparticles/react";
+import Particles from "@tsparticles/react";
 import type { Container, SingleOrMultiple } from "@tsparticles/engine";
+import { tsParticles } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "motion/react";
@@ -32,13 +33,7 @@ export const SparklesCore = (props: ParticlesProps) => {
   } = props;
   const [init, setInit] = useState(false);
   useEffect(() => {
-    const initFn = initParticlesEngine as unknown as (
-      cb: (engine: any) => Promise<void>
-    ) => Promise<void>;
-
-    initFn(async (engine: any) => {
-      await loadSlim(engine);
-    }).then(() => {
+    loadSlim(tsParticles).then(() => {
       setInit(true);
     });
   }, []);

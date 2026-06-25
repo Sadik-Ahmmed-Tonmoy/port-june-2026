@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { twMerge } from 'tailwind-merge';
 import {
   SiReact,
@@ -15,7 +15,6 @@ import {
   SiPrisma,
   SiSocketdotio,
 } from 'react-icons/si';
-import { HiDocumentText } from 'react-icons/hi';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 interface Skill {
@@ -31,18 +30,18 @@ interface IconContainerProps {
   delay?: number;
 }
 
-// ─── Skills data ────────────────────────────────────────────────────────
+// ─── Skills data (Theme-aware Icon Colors) ──────────────────────────────
 const SKILLS: Skill[] = [
-  { id: 'react', name: 'React', icon: <SiReact className="h-8 w-8 text-sky-400" />, delay: 0.2 },
-  { id: 'nextjs', name: 'Next.js', icon: <SiNextdotjs className="h-8 w-8 text-white" />, delay: 0.4 },
-  { id: 'nodejs', name: 'Node.js', icon: <SiNodedotjs className="h-8 w-8 text-green-400" />, delay: 0.3 },
-  { id: 'typescript', name: 'TypeScript', icon: <SiTypescript className="h-8 w-8 text-blue-500" />, delay: 0.5 },
-  { id: 'mongodb', name: 'MongoDB', icon: <SiMongodb className="h-8 w-8 text-green-500" />, delay: 0.6 },
-  { id: 'postgresql', name: 'PostgreSQL', icon: <SiPostgresql className="h-8 w-8 text-sky-600" />, delay: 0.7 },
-  { id: 'redis', name: 'Redis', icon: <SiRedis className="h-8 w-8 text-red-500" />, delay: 0.8 },
-  { id: 'tailwind', name: 'Tailwind CSS', icon: <SiTailwindcss className="h-8 w-8 text-cyan-400" />, delay: 0.9 },
-  { id: 'prisma', name: 'Prisma', icon: <SiPrisma className="h-8 w-8 text-indigo-400" />, delay: 1.0 },
-  { id: 'socketio', name: 'Socket.io', icon: <SiSocketdotio className="h-8 w-8 text-gray-400" />, delay: 1.1 },
+  { id: 'react', name: 'React', icon: <SiReact className="h-7 w-7 text-sky-500 dark:text-sky-400 transition-colors" />, delay: 0.2 },
+  { id: 'nextjs', name: 'Next.js', icon: <SiNextdotjs className="h-7 w-7 text-neutral-900 dark:text-white transition-colors" />, delay: 0.4 },
+  { id: 'nodejs', name: 'Node.js', icon: <SiNodedotjs className="h-7 w-7 text-green-600 dark:text-green-400 transition-colors" />, delay: 0.3 },
+  { id: 'typescript', name: 'TypeScript', icon: <SiTypescript className="h-7 w-7 text-blue-600 dark:text-blue-400 transition-colors" />, delay: 0.5 },
+  { id: 'mongodb', name: 'MongoDB', icon: <SiMongodb className="h-7 w-7 text-emerald-600 dark:text-emerald-400 transition-colors" />, delay: 0.6 },
+  { id: 'postgresql', name: 'PostgreSQL', icon: <SiPostgresql className="h-7 w-7 text-sky-700 dark:text-sky-500 transition-colors" />, delay: 0.7 },
+  { id: 'redis', name: 'Redis', icon: <SiRedis className="h-7 w-7 text-red-600 dark:text-red-500 transition-colors" />, delay: 0.8 },
+  { id: 'tailwind', name: 'Tailwind CSS', icon: <SiTailwindcss className="h-7 w-7 text-cyan-500 dark:text-cyan-400 transition-colors" />, delay: 0.9 },
+  { id: 'prisma', name: 'Prisma', icon: <SiPrisma className="h-7 w-7 text-indigo-600 dark:text-indigo-400 transition-colors" />, delay: 1.0 },
+  { id: 'socketio', name: 'Socket.io', icon: <SiSocketdotio className="h-7 w-7 text-neutral-600 dark:text-neutral-400 transition-colors" />, delay: 1.1 },
 ];
 
 // ─── Sub‑components ────────────────────────────────────────────────────
@@ -102,20 +101,35 @@ export const Radar = ({ className }: { className?: string }) => {
   );
 };
 
-/** Individual skill icon with label */
+/** Individual skill icon with label and continuous 3D float */
 const IconContainer = ({ icon, text, delay = 0 }: IconContainerProps) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.2, delay }}
-    className="relative z-50 flex flex-col items-center justify-center space-y-2"
+    initial={{ opacity: 0, scale: 0.5, y: 20 }}
+    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay, ease: "easeOut" }}
+    className="relative z-50 flex flex-col items-center justify-center space-y-2 group"
   >
-    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-700 bg-slate-800/80 shadow-inner backdrop-blur-sm">
-      {icon}
-    </div>
-    <div className="hidden rounded-md px-2 py-1 md:block">
-      <span className="text-center text-xs font-medium text-slate-400">{text}</span>
-    </div>
+    {/* Continuous floating animation wrapper */}
+    <motion.div
+      animate={{ y: [0, -8, 0] }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: delay * 2, // stagger the floating phase
+      }}
+      className="flex flex-col items-center justify-center space-y-2"
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/60 shadow-sm dark:shadow-inner backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:border-neutral-300 dark:group-hover:border-neutral-700">
+        {icon}
+      </div>
+      <div className="hidden rounded-md px-2 py-0.5 md:block transition-all duration-300">
+        <span className="text-center text-[10px] font-mono font-medium tracking-widest text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors uppercase">
+          {text}
+        </span>
+      </div>
+    </motion.div>
   </motion.div>
 );
 
@@ -128,32 +142,31 @@ export default function TechRadar() {
   const row3 = SKILLS.slice(7, 10);
 
   return (
-    <section className="relative flex h-full w-full items-end justify-start bg-black/40 px-4 ">
-      <div className="relative flex h-96 w-full max-w-4xl flex-col items-center justify-center space-y-6 overflow-hidden">
+    <section className="relative flex h-full w-full items-center justify-center px-4">
+      <div className="relative flex h-80 w-full max-w-2xl flex-col items-center justify-center space-y-6 overflow-visible">
         {/* Row 1 */}
-        <div className="flex w-full items-center justify-center gap-6 md:justify-between md:gap-0">
+        <div className="flex w-full items-center justify-center gap-6 md:justify-between md:gap-0 relative z-20">
           {row1.map((skill) => (
             <IconContainer key={skill.id} icon={skill.icon} text={skill.name} delay={skill.delay} />
           ))}
         </div>
 
         {/* Row 2 */}
-        <div className="flex w-full max-w-md items-center justify-center gap-6 md:justify-between md:gap-0">
+        <div className="flex w-full max-w-sm items-center justify-center gap-6 md:justify-between md:gap-0 relative z-20">
           {row2.map((skill) => (
             <IconContainer key={skill.id} icon={skill.icon} text={skill.name} delay={skill.delay} />
           ))}
         </div>
 
         {/* Row 3 */}
-        <div className="flex w-full items-center justify-center gap-6 md:justify-between md:gap-0">
+        <div className="flex w-full items-center justify-center gap-6 md:justify-between md:gap-0 relative z-20">
           {row3.map((skill) => (
             <IconContainer key={skill.id} icon={skill.icon} text={skill.name} delay={skill.delay} />
           ))}
         </div>
 
         {/* Radar overlay */}
-        <Radar className="absolute -bottom-12" />
-        <div className="absolute bottom-0 z-[41] h-px w-full bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <Radar className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10" />
       </div>
     </section>
   );

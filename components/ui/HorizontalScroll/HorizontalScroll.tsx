@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { ReactLenis } from "lenis/react";
-import { useContext, useEffect, useRef, useCallback, useState } from "react";
-import { ContextProvider } from "@/lib/MyContextProvider";
-import { SquigglyTextOut } from "@/components/pages/home/SquigglyText/SquigglyText";
-import ScrollTextAnimation from "@/components/pages/home/ScrollTextAnimation/ScrollTextAnimation";
-import Threads from "@/components/Threads";
+import AnimatedBeamPipelineShowcase from "@/components/pages/home/AnimatedBeamPipelineShowcase/AnimatedBeamPipelineShowcase";
 import RadarEffectDemo from "@/components/pages/home/RaderEffect/RaderEffect";
+import ScrollTextAnimation from "@/components/pages/home/ScrollTextAnimation/ScrollTextAnimation";
+import { SquigglyTextOut } from "@/components/pages/home/SquigglyText/SquigglyText";
+import { SparklesCore } from "@/components/ui/sparkles";
+import { ContextProvider } from "@/lib/MyContextProvider";
+import { ReactLenis } from "lenis/react";
+import { motion } from "motion/react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 // ─── Config ──────────────────────────────────────────────────────────────
 const SECTIONS = 3;
@@ -29,32 +31,40 @@ const SECTIONS_CONFIG: SectionData[] = [
   {
     id: "hero",
     content: (
-      <div className="relative h-full w-full overflow-hidden">
-        {/* <Threads amplitude={1} distance={0} enableMouseInteraction /> */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-          <SquigglyTextOut />
-        </div>
-      </div>
+      <>
+    
+      
+        <AnimatedBeamPipelineShowcase />
+
+        </>
     ),
   },
   {
     id: "skills",
     content: (
-      <>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[length:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-          <ScrollTextAnimation />
+      <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-12 lg:px-16 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16">
+          <div className="flex-1 w-full flex flex-col justify-center">
+            <ScrollTextAnimation />
+          </div>
+          <div className="flex-1 w-full flex items-center justify-center">
+            <RadarEffectDemo />
+          </div>
         </div>
-        <RadarEffectDemo />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[length:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_95%,#000_70%,transparent_100%)]" />
-      </>
+      </div>
     ),
   },
   {
     id: "more",
     content: (
-      <div className="flex h-full w-full items-center justify-center text-white text-4xl">
-        Your next section here
+      <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-center">
+          <SquigglyTextOut />
+        </div>
       </div>
     ),
   },
@@ -177,16 +187,15 @@ function useMagneticSnap(sectionRef: React.RefObject<HTMLElement | null>) {
 // ─── Dot Indicator ──────────────────────────────────────────────────────
 function SectionDots({ active, total }: { active: number; total: number }) {
   return (
-    <div className="fixed bottom-8 left-1/2 z-50 hidden -translate-x-1/2 items-center gap-3 md:flex">
+    <div className="fixed bottom-8 left-1/2 z-50 hidden -translate-x-1/2 items-center gap-2.5 md:flex px-3.5 py-2 rounded-full border border-neutral-200/40 dark:border-neutral-800/40 bg-white/70 dark:bg-neutral-900/60 backdrop-blur-md shadow-sm">
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
-          className="rounded-full transition-all duration-500 ease-out"
-          style={{
-            width: i === active ? 24 : 6,
-            height: 6,
-            background: i === active ? "#C4F135" : "rgba(255,255,255,0.25)",
-          }}
+          className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
+            i === active
+              ? "w-5 bg-neutral-900 dark:bg-neutral-50"
+              : "w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600"
+          }`}
         />
       ))}
     </div>
@@ -201,14 +210,6 @@ export default function HorizontalScroll() {
   const context = useContext(ContextProvider);
   if (!context) return null;
 
-
-
-
-
-
-
-
-  
   return (
     <ReactLenis root>
       <main>
@@ -216,8 +217,21 @@ export default function HorizontalScroll() {
           <section
             ref={sectionRef}
             style={{ height: `${SECTIONS * 100}vh` }}
-            className="relative hidden w-full bg-gradient-to-b from-[#0a0617] via-[#120b26] to-[#0b0614] md:block"
+            className="relative hidden w-full bg-neutral-50 dark:bg-neutral-950 md:block transition-colors duration-300"
           >
+            {/* Global Animated Particle Background */}
+            <div className="absolute inset-0 z-0 opacity-40 dark:opacity-60 pointer-events-none">
+              <SparklesCore
+                id="tsparticles-horizontal-scroll"
+                background="transparent"
+                minSize={0.6}
+                maxSize={1.4}
+                particleDensity={60}
+                className="w-full h-full"
+                particleColor="#a3a3a3"
+              />
+            </div>
+
             <div className="sticky top-0 h-screen overflow-hidden">
               <div
                 data-scroll-container
