@@ -641,7 +641,7 @@ export default function HeroSection() {
   }, [showCoffeeMsg, coffeeMessage]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-50 dark:bg-neutral-950 py-20 px-6 md:px-10 lg:px-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-50 dark:bg-transparent py-20 px-6 md:px-10 lg:px-16">
 
       {/* ── Floating Particles ── */}
       <FloatingParticles />

@@ -16,6 +16,9 @@ import PortfolioScroll from "./PortfolioScroll/PortfolioScroll";
 import HorizontalScroll from "@/components/ui/HorizontalScroll/HorizontalScroll";
 import AnimationPage from "./Example/Example";
 import AnimatedBeamPipelineShowcase from "./AnimatedBeamPipelineShowcase/AnimatedBeamPipelineShowcase";
+import CareerExperienceTimeline from "./CareerExperienceTimeline/CareerExperienceTimeline";
+import AboutMe from "./AboutMe/AboutMe";
+import MySpecializations from "./MySpecializations/MySpecializations";
 
 
 
@@ -24,11 +27,13 @@ const HomeComponent = () => {
     < >
       <ThemeSwitcher />
       <HeroSection />
-    
+      <AboutMe />
+      <MySpecializations />
+
       {/* <LoginWithGoogle /> */}
       {/* <AnimationPage/> */}
 
-      <FeyCards />
+      {/* <FeyCards /> */}
       <div className="w-full flex justify-center py-6">
         <RandomizedTextEffect text='Production ready code' />
       </div>
@@ -37,6 +42,7 @@ const HomeComponent = () => {
       <HorizontalScroll />
       <HeroParallaxDemo />
       <PortfolioGlobe />
+      <CareerExperienceTimeline />
       <PortfolioScroll />
       {/* <RollingText/> */}
 

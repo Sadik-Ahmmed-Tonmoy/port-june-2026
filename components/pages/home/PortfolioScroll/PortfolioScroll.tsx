@@ -5,8 +5,9 @@ import { ReactLenis } from 'lenis/react';
 import { cn } from '@/lib/utils';
 import TextAnimation from '@/components/uilayouts/scroll-text';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Code, Database, Server, Zap, Users, Rocket, GitBranch } from 'lucide-react';
 import { useRef } from 'react';
+import perfectoHome from '@/assets/images/perfecto_home.png';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 interface SectionData {
@@ -15,6 +16,7 @@ interface SectionData {
   textColor: string;
   title: React.ReactNode;
   subTitle?: string;
+  stats?: { label: string; value: string; icon: React.ReactNode }[];
 }
 
 interface TechItem {
@@ -27,6 +29,8 @@ interface TechItem {
 interface ProjectItem {
   title: string;
   image: string;
+  description: string;
+  tech: string[];
 }
 
 // ─── Content Data ──────────────────────────────────────────────────────
@@ -38,7 +42,7 @@ const SECTIONS: SectionData[] = [
     title: (
       <>
         Full‑Stack Developer <br />
-        <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
           Next.js · Node.js · TypeScript
         </span>
       </>
@@ -54,6 +58,8 @@ const SECTIONS: SectionData[] = [
         <TextAnimation text="3+ years of experience" lineAnime classname="inline-block" />
         <br />
         <TextAnimation text="20+ production apps shipped" lineAnime direction="right" classname="inline-block" />
+        <br />
+        <TextAnimation text="1.2M+ database queries optimized" lineAnime classname="inline-block text-sm" />
       </>
     ),
   },
@@ -69,23 +75,44 @@ const SECTIONS: SectionData[] = [
           classname="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
         />
         <br />
-        <span className="text-3xl text-neutral-400">real‑world projects, real impact</span>
+        <span className="text-3xl text-neutral-400">real‑world projects with real impact</span>
       </>
     ),
   },
 ];
 
 const TECH_STACK: TechItem[] = [
-  { name: 'React', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', skew: 'left' },
   { name: 'Next.js', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg', skew: 'right', invert: true },
   { name: 'Node.js', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg', skew: 'left' },
   { name: 'TypeScript', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg', skew: 'right' },
+  { name: 'MongoDB', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg', skew: 'left' },
+  { name: 'React', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', skew: 'left' },
+  { name: 'Redis', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg', skew: 'right' },
+  { name: 'PostgreSQL', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg', skew: 'left' },
+  { name: 'Docker', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg', skew: 'right' },
+  { name: 'Prisma', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg', skew: 'left' },
+  { name: 'Tailwind CSS', src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg', skew: 'right' },
 ];
 
 const PROJECTS: ProjectItem[] = [
-  { title: 'KnockMyRide', image: 'https://images.unsplash.com/photo-1718183120769-ece47f31045b?w=500&auto=format&fit=crop' },
-  { title: 'PerfectoBD', image: 'https://images.unsplash.com/photo-1715432362539-6ab2ab480db2?w=500&auto=format&fit=crop' },
-  { title: 'Primely Gaming', image: 'https://images.unsplash.com/photo-1685904042960-66242a0ac352?w=500&auto=format&fit=crop' },
+  { 
+    title: 'KnockMyRide', 
+    image: 'https://i.ibb.co.com/kgRd6hG7/Gemini-Generated-Image-9hg43s9hg43s9hg4.png',
+    description: "Bangladesh's first smart QR sticker system for instant vehicle owner contact",
+    tech: ['Next.js', 'Node.js', 'MongoDB', 'Prisma', 'Redis', 'Sharp']
+  },
+  { 
+    title: 'PerfectoBD', 
+    image: perfectoHome.src,
+    description: 'Full-stack e-commerce platform with admin dashboard and real-time inventory',
+    tech: ['React', 'Firebase', 'Redux', 'RTK Query', 'Tailwind CSS', 'AntD']
+  },
+  { 
+    title: 'Primely Gaming', 
+    image: 'https://images.unsplash.com/photo-1685904042960-66242a0ac352?w=500&auto=format&fit=crop',
+    description: 'Online tournament platform with brackets, player registration, and live results',
+    tech: ['React', 'Redux', 'Tailwind CSS', 'Swiper.js', 'Framer Motion']
+  },
 ];
 
 // ─── Helper Components ─────────────────────────────────────────────────
@@ -108,6 +135,7 @@ const StickySection = ({
   textColor,
   title,
   subTitle,
+  stats,
 }: SectionData) => (
   <section
     id={id}
@@ -118,9 +146,24 @@ const StickySection = ({
     )}
   >
     <GridOverlay />
-    <div className="px-8 text-center">
-      <div className="text-5xl font-semibold leading-[120%] tracking-tight 2xl:text-7xl">{title}</div>
-      {subTitle && <p className="mt-4 text-lg text-neutral-400">{subTitle}</p>}
+    <div className="px-4 sm:px-8 text-center max-w-5xl mx-auto">
+      <div className="text-3xl sm:text-5xl lg:text-7xl font-semibold leading-[110%] tracking-tight">
+        {title}
+      </div>
+      {subTitle && <p className="mt-4 text-base sm:text-lg text-neutral-400">{subTitle}</p>}
+      {stats && (
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 max-w-3xl mx-auto">
+          {stats.map((stat, i) => (
+            <div key={i} className="bg-white/5 dark:bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border border-white/10">
+              <div className="flex items-center justify-center gap-2 text-indigo-400">
+                {stat.icon}
+                <span className="text-xl sm:text-2xl font-bold">{stat.value}</span>
+              </div>
+              <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 );
@@ -129,16 +172,19 @@ const StickySection = ({
 const TechCard = ({ name, src, skew, invert }: TechItem) => (
   <figure
     className={cn(
-      'grid place-content-center',
+      'grid place-content-center p-4 sm:p-6 hover:scale-105 transition-transform duration-300',
       skew === 'left' ? '-skew-x-12' : 'skew-x-12'
     )}
   >
     <img
       src={src}
       alt={name}
-      className={cn('h-32 w-32 object-contain', invert && 'invert')}
+      className={cn('h-20 w-20 sm:h-32 sm:w-32 object-contain', invert && 'invert')}
       loading="lazy"
     />
+    <figcaption className="text-xs sm:text-sm text-neutral-400 mt-2 text-center font-mono">
+      {name}
+    </figcaption>
   </figure>
 );
 
@@ -203,6 +249,14 @@ export default function PortfolioScroll(): JSX.Element {
   const nameText = "Sadik Ahmmed Tonmoy";
   const letters = nameText.split('');
 
+  // Stats data with icons
+  const statsData = [
+    { label: "Projects", value: "20+", icon: <Rocket className="w-4 h-4" /> },
+    { label: "API Endpoints", value: "100+", icon: <Server className="w-4 h-4" /> },
+    { label: "Database Queries", value: "1.2M", icon: <Database className="w-4 h-4" /> },
+    { label: "Performance Gain", value: "35%", icon: <Zap className="w-4 h-4" /> },
+  ];
+
   return (
     <ReactLenis root>
       <main className="bg-black max-w- mx-auto">
@@ -213,13 +267,13 @@ export default function PortfolioScroll(): JSX.Element {
 
         {/* ── Tech Stack (sticky + skewed icons) ── */}
         <section className="w-full bg-slate-950 text-white overflow-hidden">
-          <div className="grid grid-cols-2">
-            <div className="sticky top-0 flex h-screen items-center justify-center">
-              <h3 className="px-8 text-center text-5xl font-semibold leading-[120%] tracking-tight 2xl:text-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+            <div className="sticky top-0 flex h-screen items-center justify-center order-2 lg:order-1">
+              <h3 className="px-4 sm:px-8 text-center text-3xl sm:text-5xl lg:text-6xl font-semibold leading-[120%] tracking-tight">
                 My Tech <br /> Stack
               </h3>
             </div>
-            <div className="grid gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 p-4 sm:p-8 order-1 lg:order-2">
               {TECH_STACK.map((tech) => (
                 <TechCard key={tech.name} {...tech} />
               ))}
@@ -229,29 +283,47 @@ export default function PortfolioScroll(): JSX.Element {
 
         {/* ── Project Showcase (sticky images + text) ── */}
         <section className="w-full bg-slate-950 text-white">
-          <div className="grid grid-cols-2 px-8">
-            <div className="grid gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 px-4 sm:px-8 py-8 lg:py-0 min-h-screen">
+            <div className="grid gap-8 lg:gap-12 order-2 lg:order-1">
               {PROJECTS.map((project) => (
-                <figure key={project.title} className="sticky top-0 grid h-screen place-content-center">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="h-96 w-96 rounded-md object-cover transition-all duration-300"
-                    loading="lazy"
-                  />
-                  <figcaption className="mt-2 text-center text-sm text-neutral-400">
-                    {project.title}
+                <figure key={project.title} className="sticky top-8 lg:top-0 grid place-content-center lg:h-screen py-8 lg:py-0">
+                  <div className="relative group">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full max-w-md mx-auto h-48 sm:h-64 lg:h-96 rounded-lg sm:rounded-xl object-cover transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg sm:rounded-xl" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.tech.map((tech) => (
+                          <span key={tech} className="text-[8px] sm:text-[10px] font-mono bg-white/10 backdrop-blur-sm px-2 py-1 rounded-full text-neutral-300">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <figcaption className="mt-3 sm:mt-4 text-center">
+                    <h4 className="text-lg sm:text-xl font-bold text-white">{project.title}</h4>
+                    <p className="text-xs sm:text-sm text-neutral-400 mt-1 max-w-sm mx-auto">{project.description}</p>
                   </figcaption>
                 </figure>
               ))}
             </div>
-            <div className="sticky top-0 grid h-screen place-content-center">
-              <h3 className="text-right text-4xl font-medium leading-[120%] tracking-tight">
-                Production‑ready <br /> apps with <br />
-                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                  real users
-                </span>
-              </h3>
+            <div className="sticky top-0 flex h-screen items-center justify-center order-1 lg:order-2">
+              <div className="text-center lg:text-right px-4">
+                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-medium leading-[120%] tracking-tight">
+                  Production‑ready <br /> apps with <br />
+                  <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    real users
+                  </span>
+                </h3>
+                <p className="text-sm sm:text-base text-neutral-400 mt-4 max-w-sm mx-auto lg:ml-auto">
+                  Built with modern tech stacks, deployed at scale, and making a difference.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -268,29 +340,29 @@ export default function PortfolioScroll(): JSX.Element {
             className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[length:54px_54px] opacity-40 pointer-events-none"
           />
 
-          <div className="w-full max-w-7xl mx-auto px-6 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-end relative z-10">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-end relative z-10">
             <motion.div 
-              className="md:col-span-7 flex flex-col items-start gap-4"
+              className="md:col-span-7 flex flex-col items-start gap-3 md:gap-4"
               style={{
                 opacity: useTransform(scrollYProgress, [0, 0.2, 0.5, 1], [0, 0.5, 1, 1]),
                 y: useTransform(scrollYProgress, [0, 0.2, 0.5], [50, 20, 0])
               }}
             >
-              <span className="text-xs font-bold tracking-[0.25em] text-indigo-400 uppercase">
+              <span className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-indigo-400 uppercase">
                 LET'S BUILD SOMETHING EXTRAORDINARY
               </span>
-              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight max-w-lg leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-lg leading-tight">
                 Looking for a developer who pushes the limits?
               </h2>
-              <p className="text-neutral-400 font-normal leading-relaxed max-w-md mt-2">
+              <p className="text-sm sm:text-base text-neutral-400 font-normal leading-relaxed max-w-md mt-2">
                 Let's talk about contract work, consulting, or full-time roles. I'm ready to ship code that scales and users adore.
               </p>
-              <div className="mt-6 flex flex-wrap gap-4">
+              <div className="mt-4 sm:mt-6 flex flex-wrap gap-3 sm:gap-4">
                 <motion.a
                   whileHover={{ y: -2, scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
-                  href="mailto:sadik.ahmmed.tonmoy@gmail.com"
-                  className="bg-indigo-600 text-white font-bold px-6 py-3 rounded-full hover:bg-indigo-500 shadow-md text-sm"
+                  href="mailto:workwithsadik@gmail.com"
+                  className="bg-indigo-600 text-white font-bold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-indigo-500 shadow-md text-xs sm:text-sm"
                 >
                   Get In Touch
                 </motion.a>
@@ -298,52 +370,79 @@ export default function PortfolioScroll(): JSX.Element {
                   whileHover={{ y: -2, scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
                   href="#"
-                  className="bg-neutral-800 text-white font-bold px-6 py-3 rounded-full hover:bg-neutral-700 text-sm border border-neutral-700/30"
+                  className="bg-neutral-800 text-white font-bold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-neutral-700 text-xs sm:text-sm border border-neutral-700/30"
                 >
                   Download Resume
                 </motion.a>
               </div>
+
+              {/* Quick stats in footer */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8 w-full max-w-md">
+                {statsData.map((stat, i) => (
+                  <div key={i} className="bg-white/5 rounded-lg p-2 sm:p-3 backdrop-blur-sm border border-white/5">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-indigo-400">
+                      {stat.icon}
+                      <span className="text-sm sm:text-base font-bold">{stat.value}</span>
+                    </div>
+                    <p className="text-[8px] sm:text-[10px] text-neutral-500 mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
 
             <motion.div 
-              className="md:col-span-5 flex flex-col md:items-end gap-6 text-sm text-neutral-400 font-normal"
+              className="md:col-span-5 flex flex-col md:items-end gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-400 font-normal"
               style={{
                 opacity: useTransform(scrollYProgress, [0, 0.3, 0.5, 1], [0, 0.3, 1, 1]),
                 y: useTransform(scrollYProgress, [0, 0.3, 0.5], [40, 20, 0])
               }}
             >
-              <div className="flex flex-col md:items-end">
-                <span className="text-xs text-neutral-500 uppercase tracking-wider">Social Platforms</span>
-                <div className="mt-2 flex gap-4">
-                  {['GitHub', 'LinkedIn', 'Twitter'].map((link) => (
+              <div className="flex flex-col md:items-end w-full">
+                <span className="text-[10px] sm:text-xs text-neutral-500 uppercase tracking-wider">Social Platforms</span>
+                <div className="mt-2 flex gap-3 sm:gap-4 flex-wrap">
+                  {[
+                    { name: 'GitHub', href: 'https://github.com/Sadik-Ahmmed-Tonmoy' },
+                    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/sadik-ahmmed-tonmoy/' },
+                    { name: 'Twitter', href: 'https://x.com/' },
+                    { name: 'Portfolio', href: '#' }
+                  ].map((link) => (
                     <a
-                      key={link}
-                      href="#"
-                      className="hover:text-indigo-400 transition-colors font-medium relative py-1 group"
+                      key={link.name}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-indigo-400 transition-colors font-medium relative py-1 group text-xs sm:text-sm"
                     >
-                      {link}
+                      {link.name}
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300" />
                     </a>
                   ))}
                 </div>
               </div>
 
-              <div className="flex flex-col md:items-end">
-                <span className="text-xs text-neutral-500 uppercase tracking-wider">Location</span>
-                <span className="mt-1 text-white font-medium">Dhaka, Bangladesh</span>
+              <div className="flex flex-col md:items-end w-full">
+                <span className="text-[10px] sm:text-xs text-neutral-500 uppercase tracking-wider">Location</span>
+                <span className="mt-1 text-white font-medium text-sm sm:text-base">Dhaka, Bangladesh</span>
+              </div>
+
+              <div className="flex flex-col md:items-end w-full">
+                <span className="text-[10px] sm:text-xs text-neutral-500 uppercase tracking-wider">Contact</span>
+                <a href="mailto:workwithsadik@gmail.com" className="text-white font-medium text-sm sm:text-base hover:text-indigo-400 transition-colors">
+                  workwithsadik@gmail.com
+                </a>
               </div>
             </motion.div>
           </div>
 
           {/* Massive Reveal Typography - Individual Letter Animation */}
-          <div className="w-full flex justify-center mt-20 select-none overflow-hidden py-4 border-t border-neutral-900/50 relative z-10">
+          <div className="w-full flex justify-center mt-16 sm:mt-20 select-none overflow-hidden py-4 border-t border-neutral-900/50 relative z-10">
             <motion.div
               style={{
                 opacity: footerTextOpacity,
                 scale: footerScale,
                 rotate: footerRotate,
               }}
-              className="flex flex-wrap justify-center gap-1 md:gap-2"
+              className="flex flex-wrap justify-center gap-0.5 sm:gap-1 md:gap-2"
             >
               {letters.map((letter, index) => {
                 // Calculate individual letter offset based on position
@@ -394,7 +493,7 @@ export default function PortfolioScroll(): JSX.Element {
                       display: 'inline-block',
                     }}
                     className={cn(
-                      "text-[12vw] md:text-[10vw] lg:text-[8vw] font-black uppercase leading-[0.8] tracking-tighter",
+                      "text-[8vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] font-black uppercase leading-[0.8] tracking-tighter",
                       "text-transparent bg-clip-text bg-gradient-to-b from-white/20 via-white/10 to-transparent"
                     )}
                     transition={{
@@ -412,14 +511,14 @@ export default function PortfolioScroll(): JSX.Element {
 
           {/* Footer Sub-bar */}
           <motion.div 
-            className="w-full max-w-7xl mx-auto px-6 md:px-16 flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-8 border-t border-neutral-900 text-xs text-neutral-500 z-10"
+            className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-16 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-8 border-t border-neutral-900 text-[10px] sm:text-xs text-neutral-500 z-10"
             style={{
               opacity: useTransform(scrollYProgress, [0.5, 0.7, 1], [0, 0.5, 1]),
               y: useTransform(scrollYProgress, [0.5, 0.7], [20, 0])
             }}
           >
             <span>&copy; 2026 Sadik Ahmmed Tonmoy. All rights reserved.</span>
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               <a href="#" className="hover:text-neutral-300 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-neutral-300 transition-colors">Terms of Use</a>
             </div>
@@ -427,10 +526,10 @@ export default function PortfolioScroll(): JSX.Element {
               whileHover={{ y: -3, scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors bg-neutral-900/80 px-3 py-2 rounded-full border border-neutral-800"
+              className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors bg-neutral-900/80 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-neutral-800 text-[10px] sm:text-xs"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5" />
+              <ArrowUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </motion.button>
           </motion.div>
         </footer>
