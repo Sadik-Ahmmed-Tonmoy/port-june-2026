@@ -8,7 +8,7 @@ import { useGPUPerformance } from '@/utils/useGPUPerformance';
 
 // ─── Page content ──────────────────────────────────────────────────────
 const pageData = {
-  title: 'Sadik Ahmmed',
+  title: 'Sadik Ahmmed Tonmoy',
   subtitle: 'Full‑Stack Developer',
   tagline: 'Next.js · TypeScript · Node.js · MongoDB',
   description:

@@ -9,14 +9,14 @@ import { GitBranch } from "lucide-react";
 
 export default function AnimatedBeamPipelineShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Left Column Nodes
   const laptopRef = useRef<HTMLDivElement>(null);
   const gitRef = useRef<HTMLDivElement>(null);
-  
+
   // Central Node
   const compilerRef = useRef<HTMLDivElement>(null);
-  
+
   // Right Column Nodes
   const vercelRef = useRef<HTMLDivElement>(null);
   const dbRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ export default function AnimatedBeamPipelineShowcase({ className }: { className?
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-500/5 dark:from-blue-500/5 dark:to-purple-500/5 blur-[120px] rounded-full pointer-events-none -z-10 animate-pulse duration-[10s]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        
+
         {/* Apple-inspired typography header */}
         <div className="mb-20 text-center max-w-3xl mx-auto">
           <motion.span
@@ -74,7 +74,7 @@ export default function AnimatedBeamPipelineShowcase({ className }: { className?
 
         {/* Nodes Workspace Grid */}
         <div className="flex h-full w-full flex-row items-stretch justify-between gap-6 sm:gap-16 md:gap-28 lg:gap-36 relative z-10 py-10">
-          
+
           {/* Left Column: Input Environment */}
           <div className="flex flex-col justify-center gap-16 sm:gap-20">
             {/* Local Dev Node */}
@@ -142,7 +142,7 @@ export default function AnimatedBeamPipelineShowcase({ className }: { className?
 
           {/* Right Column: Deployment Endpoints */}
           <div className="flex flex-col justify-center gap-12 sm:gap-16">
-            
+
             {/* Production Site (Vercel) */}
             <div className="flex flex-col items-center gap-2">
               <Circle

@@ -42,6 +42,7 @@ const SKILLS: Skill[] = [
   { id: 'tailwind', name: 'Tailwind CSS', icon: <SiTailwindcss className="h-7 w-7 text-cyan-500 dark:text-cyan-400 transition-colors" />, delay: 0.9 },
   { id: 'prisma', name: 'Prisma', icon: <SiPrisma className="h-7 w-7 text-indigo-600 dark:text-indigo-400 transition-colors" />, delay: 1.0 },
   { id: 'socketio', name: 'Socket.io', icon: <SiSocketdotio className="h-7 w-7 text-neutral-600 dark:text-neutral-400 transition-colors" />, delay: 1.1 },
+  
 ];
 
 // ─── Sub‑components ────────────────────────────────────────────────────

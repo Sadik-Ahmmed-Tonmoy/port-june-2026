@@ -1,22 +1,27 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "motion/react";
-import { 
-  Mail, 
-  Terminal, 
-  Coffee, 
-  ArrowRight, 
-  Sparkles, 
-  MapPin, 
+import {
+  Mail,
+  Terminal,
+  Coffee,
+  ArrowRight,
+  Sparkles,
+  MapPin,
   Zap,
   Code2,
   Star,
   Rocket,
   Circle,
   Square,
-  Triangle
+  Triangle,
+  Play,
+  Pause
 } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
+import Image from "next/image";
+
+import dp from '@/assets/images/DP.jpg'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface TechPill {
@@ -130,7 +135,7 @@ const FloatingShapes = () => {
             ease: "easeInOut",
           }}
         >
-          <shape.Icon className={`${shape.color} w-${shape.size/4} h-${shape.size/4}`} />
+          <shape.Icon className={`${shape.color} w-${shape.size / 4} h-${shape.size / 4}`} />
         </motion.div>
       ))}
     </div>
@@ -155,10 +160,10 @@ const SplitWords = ({
         key={i}
         initial={{ y: "120%", opacity: 0, rotateX: 10 }}
         animate={{ y: 0, opacity: 1, rotateX: 0 }}
-        transition={{ 
-          duration: 0.8, 
-          delay: delay + i * 0.08, 
-          ease: [0.16, 1, 0.3, 1] 
+        transition={{
+          duration: 0.8,
+          delay: delay + i * 0.08,
+          ease: [0.16, 1, 0.3, 1]
         }}
         className="inline-block mr-[0.15em]"
       >
@@ -205,14 +210,14 @@ const TerminalCard = ({
     mouseY.set(e.clientY - rect.top - rect.height / 2);
     scale.set(1.02);
   };
-  const resetMouse = () => { 
-    mouseX.set(0); 
+  const resetMouse = () => {
+    mouseX.set(0);
     mouseY.set(0);
     scale.set(1);
   };
 
   const lines = [
-    { label: "name", value: '"Sadik Ahmmed"', color: "text-indigo-400" },
+    { label: "name", value: '"Sadik Ahmmed Tonmoy"', color: "text-indigo-400" },
     { label: "role", value: '"Full-Stack Developer"', color: "text-emerald-400" },
     { label: "location", value: '"Dhaka, Bangladesh"', color: "text-neutral-600 dark:text-neutral-400" },
     { label: "experience", value: '"3+ Years"', color: "text-amber-400" },
@@ -228,11 +233,11 @@ const TerminalCard = ({
       ...lines.map(l => `  ${l.label}: ${l.value},`),
       '};'
     ];
-    
+
     let currentLine = 0;
     let currentChar = 0;
     let output: string[] = [];
-    
+
     const interval = setInterval(() => {
       if (currentLine < allLines.length) {
         const line = allLines[currentLine];
@@ -251,7 +256,7 @@ const TerminalCard = ({
         clearInterval(interval);
       }
     }, 15);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -260,15 +265,12 @@ const TerminalCard = ({
       ref={cardRef}
       onMouseMove={handleMouse}
       onMouseLeave={resetMouse}
-      style={{ 
-        rotateX, 
-        rotateY, 
+      style={{
+        rotateX,
+        rotateY,
         scale,
-        transformPerspective: "1000px" 
+        transformPerspective: "1000px"
       }}
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className="relative w-full max-w-md rounded-2xl border border-neutral-200/30 dark:border-neutral-800/50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl shadow-2xl shadow-black/5 dark:shadow-black/60 overflow-hidden group"
     >
       {/* Pulsing border glow */}
@@ -287,24 +289,24 @@ const TerminalCard = ({
       {/* Ambient glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/5 via-transparent to-transparent pointer-events-none" />
-      
+
       {/* Top edge shimmer */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
 
       {/* Window chrome - Apple style */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200/20 dark:border-neutral-800/50 bg-white/40 dark:bg-white/[0.02]">
         <div className="flex items-center gap-2">
-          <motion.div 
+          <motion.div
             className="h-2.5 w-2.5 rounded-full bg-rose-500/80"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
-          <motion.div 
+          <motion.div
             className="h-2.5 w-2.5 rounded-full bg-amber-500/80"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
           />
-          <motion.div 
+          <motion.div
             className="h-2.5 w-2.5 rounded-full bg-emerald-500/80"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
@@ -320,7 +322,7 @@ const TerminalCard = ({
           <span>sadik@portfolio</span>
         </div>
         <div className="w-14 flex justify-end">
-          <motion.span 
+          <motion.span
             className="text-[10px] font-mono text-indigo-400/60 tracking-widest"
             animate={{ opacity: [0.4, 0.8, 0.4] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -346,7 +348,7 @@ const TerminalCard = ({
                   .replace(/const/, '<span class="text-purple-400">const</span>')
                   .replace(/developer/, '<span class="text-blue-400">developer</span>')
                   .replace(/name:/, '<span class="text-neutral-500">name:</span>')
-                  .replace(/"Sadik Ahmmed"/, '<span class="text-indigo-400">"Sadik Ahmmed"</span>')
+                  .replace(/"Sadik Ahmmed Tonmoy"/, '<span class="text-indigo-400">"Sadik Ahmmed Tonmoy"</span>')
                   .replace(/role:/, '<span class="text-neutral-500">role:</span>')
                   .replace(/"Full-Stack Developer"/, '<span class="text-emerald-400">"Full-Stack Developer"</span>')
                   .replace(/location:/, '<span class="text-neutral-500">location:</span>')
@@ -370,11 +372,11 @@ const TerminalCard = ({
         {displayLines.length >= 8 && (
           <>
             {/* Divider */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="border-t border-neutral-200/20 dark:border-neutral-800/50" 
+              className="border-t border-neutral-200/20 dark:border-neutral-800/50"
             />
 
             {/* Coffee counter widget */}
@@ -393,7 +395,7 @@ const TerminalCard = ({
                     >
                       <Coffee className="size-4 text-amber-500" />
                     </motion.span>
-                    <motion.span 
+                    <motion.span
                       className="font-bold text-neutral-900 dark:text-white text-sm"
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 0.3, delay: 0.5 }}
@@ -441,14 +443,14 @@ const TerminalCard = ({
               className="border-t border-neutral-200/20 dark:border-neutral-800/50 pt-3 flex items-center justify-between text-[9px] text-neutral-400 dark:text-neutral-600"
             >
               <span className="flex items-center gap-1.5">
-                <motion.span 
+                <motion.span
                   className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
                 SYSTEM ACTIVE
               </span>
-              <motion.span 
+              <motion.span
                 className="flex items-center gap-1 text-indigo-500/60"
                 animate={{ x: [0, 2, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -467,18 +469,152 @@ const TerminalCard = ({
   );
 };
 
+/** Profile Photo Card with Apple-inspired ID styling */
+const ProfilePhotoCard = () => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-150, 150], [8, -8]), { stiffness: 100, damping: 20 });
+  const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-8, 8]), { stiffness: 100, damping: 20 });
+  const scale = useSpring(1, { stiffness: 100, damping: 20 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+    scale.set(1.02);
+  };
+  const resetMouse = () => { 
+    mouseX.set(0); 
+    mouseY.set(0);
+    scale.set(1);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouse}
+      onMouseLeave={resetMouse}
+      style={{ 
+        rotateX, 
+        rotateY, 
+        scale,
+        transformPerspective: "1000px" 
+      }}
+      className="relative w-full max-w-md h-[468px] rounded-2xl border border-neutral-200/30 dark:border-neutral-800/50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl shadow-2xl overflow-hidden group flex flex-col justify-end"
+    >
+      {/* Profile Image fills the card */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={dp}
+          alt="Sadik Ahmmed Tonmoy Profile Photo"
+          fill
+          className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+          priority
+        />
+        {/* Apple-style gradient dark overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent z-10" />
+      </div>
+
+      {/* Floating Sparkles tag */}
+      <div className="absolute top-5 right-5 z-20 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5 text-white text-[10px] font-bold tracking-wider font-mono">
+        <Sparkles className="size-3 text-amber-400 animate-pulse" />
+        <span>CREATIVE DEV</span>
+      </div>
+
+      {/* Info Card Content */}
+      <div className="relative z-20 p-8 space-y-4 text-white text-left">
+        <div className="space-y-1">
+          <h3 className="text-3xl font-extrabold tracking-tight">Sadik Ahmmed Tonmoy</h3>
+          <p className="text-xs text-neutral-300 font-medium flex items-center gap-1.5">
+            <MapPin className="size-3.5 text-indigo-400" /> Dhaka, Bangladesh
+          </p>
+        </div>
+        
+        <p className="text-xs text-neutral-200 leading-relaxed font-medium">
+          Full-stack engineer crafting production-grade products, SaaS webapps, and animated interactive layouts.
+        </p>
+
+        {/* Small tags grid */}
+        <div className="flex flex-wrap gap-1.5 pt-2">
+          {["Next.js", "TypeScript", "Node.js", "Docker"].map((tag) => (
+            <span key={tag} className="text-[10px] font-mono font-semibold bg-white/15 backdrop-blur-md px-3 py-1 rounded-md border border-white/10">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// ─── Progress Bar Component for Tab Autoplay ─────────────────────────────────
+const ProgressBar = ({
+  duration = 6000,
+  isActive,
+  isPaused,
+  onComplete,
+}: {
+  duration?: number;
+  isActive: boolean;
+  isPaused: boolean;
+  onComplete: () => void;
+}) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) {
+      const resetTimer = window.setTimeout(() => setProgress(0), 0);
+      return () => clearTimeout(resetTimer);
+    }
+
+    const tickRate = 50;
+    const timer = setInterval(() => {
+      if (isPaused) return;
+      setProgress((prev) => prev + tickRate);
+    }, tickRate);
+
+    return () => clearInterval(timer);
+  }, [isActive, isPaused]);
+
+  useEffect(() => {
+    if (progress >= duration) {
+      onComplete();
+      setProgress(0);
+    }
+  }, [progress, duration, onComplete]);
+
+  if (!isActive) return null;
+
+  return (
+    <motion.div
+      className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full"
+      style={{ width: `${Math.min((progress / duration) * 100, 100)}%` }}
+      layoutId="active-tab-progress"
+      transition={{ ease: "linear" }}
+    />
+  );
+};
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const [coffeeCount, setCoffeeCount] = useState(12);
+  const [coffeeCount, setCoffeeCount] = useState(() => {
+    try {
+      const saved = typeof window !== "undefined" ? localStorage.getItem("portfolio_coffee_count") : null;
+      return saved ? parseInt(saved, 10) : 12;
+    } catch {
+      return 12;
+    }
+  });
   const [coffeeMessage, setCoffeeMessage] = useState("");
   const [showCoffeeMsg, setShowCoffeeMsg] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeTab, setActiveTab] = useState<"terminal" | "profile">("profile");
+  const [isHovered, setIsHovered] = useState(false);
+  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
 
-  // Persist coffee across sessions
-  useEffect(() => {
-    const saved = localStorage.getItem("portfolio_coffee_count");
-    if (saved) setCoffeeCount(parseInt(saved, 10));
-  }, []);
+  // Persist coffee across sessions (writes happen on brew)
 
   // Mouse tracking for cursor glow
   useEffect(() => {
@@ -506,7 +642,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-50 dark:bg-neutral-950 py-20 px-6 md:px-10 lg:px-16">
-      
+
       {/* ── Floating Particles ── */}
       <FloatingParticles />
       <FloatingShapes />
@@ -541,7 +677,7 @@ export default function HeroSection() {
       </div>
 
       {/* ── Grid overlay with animated opacity ── */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[length:60px_60px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_60%,transparent_100%)] pointer-events-none"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 5, repeat: Infinity }}
@@ -551,7 +687,7 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
         {/* ─── Left Column ──────────────────────────────────────── */}
-        <div className="lg:col-span-7 flex flex-col items-start">
+        <div className="order-2 lg:order-1 lg:col-span-7 flex flex-col items-start">
 
           {/* Availability badge with pulse */}
           <motion.div
@@ -611,27 +747,27 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 max-w-xl text-[clamp(0.9rem,1.4vw,1.05rem)] text-neutral-600 dark:text-neutral-400 leading-relaxed group"
           >
-            Full-stack engineer 
+            Full-stack engineer
             <span className="text-neutral-900 dark:text-white font-medium relative inline-block">
-             
-              <motion.span 
+
+              <motion.span
                 className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-indigo-500 to-transparent"
                 initial={{ scaleX: 0 }}
                 whileHover={{ scaleX: 1 }}
                 transition={{ duration: 0.3 }}
               />
-            </span> 
-            {" "}and founder of{" "} 
+            </span>
+            {" "}and founder of{" "}
             <span className="text-indigo-600 dark:text-indigo-400 font-medium relative inline-block">
               KnockMyRide
-              <motion.span 
+              <motion.span
                 className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-indigo-500 to-transparent"
                 initial={{ scaleX: 0 }}
                 whileHover={{ scaleX: 1 }}
                 transition={{ duration: 0.3 }}
               />
-            </span> 
-            {" "}— Bangladesh's first QR vehicle contact SaaS. 
+            </span>
+            {" "}— Bangladesh's first QR vehicle contact SaaS.
             I craft production-grade systems with modern technologies, from Prisma schema to animated UI.
           </motion.p>
 
@@ -640,21 +776,21 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex flex-wrap gap-2 max-w-xl"
+            className="mt-8 flex flex-wrap gap-2 max-w-"
           >
             {TECH_STACK.map((tech, i) => (
               <motion.span
                 key={tech.name}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  duration: 0.4, 
+                transition={{
+                  duration: 0.4,
                   delay: 0.95 + i * 0.06,
                   type: "spring",
                   stiffness: 100
                 }}
-                whileHover={{ 
-                  scale: 1.08, 
+                whileHover={{
+                  scale: 1.08,
                   y: -3,
                   rotate: [0, -5, 5, 0],
                   transition: { duration: 0.3 }
@@ -681,8 +817,8 @@ export default function HeroSection() {
           >
             <motion.a
               href="#projects"
-              whileHover={{ 
-                y: -3, 
+              whileHover={{
+                y: -3,
                 scale: 1.03,
                 boxShadow: "0 20px 40px -12px rgba(79, 70, 229, 0.4)"
               }}
@@ -699,8 +835,8 @@ export default function HeroSection() {
             </motion.a>
             <motion.a
               href="mailto:workwithsadik@gmail.com"
-              whileHover={{ 
-                y: -3, 
+              whileHover={{
+                y: -3,
                 scale: 1.03,
                 backgroundColor: "rgba(255,255,255,0.1)"
               }}
@@ -724,7 +860,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5, delay: 1.3 }}
             className="mt-10 flex items-center gap-4"
           >
-            <motion.span 
+            <motion.span
               className="text-[10px] font-medium text-neutral-400 dark:text-neutral-600 uppercase tracking-[0.2em]"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 3, repeat: Infinity }}
@@ -739,8 +875,8 @@ export default function HeroSection() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ 
-                    scale: 1.15, 
+                  whileHover={{
+                    scale: 1.15,
                     y: -3,
                     rotate: [0, -10, 10, 0],
                     transition: { duration: 0.3 }
@@ -780,18 +916,18 @@ export default function HeroSection() {
             onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
           >
             <motion.div
-              animate={{ 
+              animate={{
                 y: [0, 8, 0],
                 opacity: [0.5, 1, 0.5]
               }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: 2.5, 
-                ease: "easeInOut" 
+              transition={{
+                repeat: Infinity,
+                duration: 2.5,
+                ease: "easeInOut"
               }}
               className="w-px h-10 bg-gradient-to-b from-indigo-500/60 to-transparent"
             />
-            <motion.span 
+            <motion.span
               className="text-[10px] tracking-[0.2em] text-neutral-400 dark:text-neutral-700 uppercase font-medium"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -801,14 +937,104 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ─── Right Column: Terminal card ──────────────────────── */}
-        <div className="lg:col-span-5 w-full flex justify-center lg:justify-end">
-          <TerminalCard
-            coffeeCount={coffeeCount}
-            onBrew={handleBrew}
-            showCoffeeMsg={showCoffeeMsg}
-            coffeeMessage={coffeeMessage}
-          />
+        {/* ─── Right Column: Card with Tab System ──────── */}
+        <div className="order-1 lg:order-2 lg:col-span-5 w-full flex justify-center lg:justify-end items-center">
+          <div 
+            className="w-full max-w-md flex flex-col items-center gap-6"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Tabs Switcher */}
+            <div className="flex items-center gap-1.5 p-1.5 rounded-full border border-neutral-200/30 dark:border-neutral-800/50 bg-white/40 dark:bg-neutral-950/40 backdrop-blur-xl shadow-lg w-fit">
+              {/* Play/Pause Button */}
+              <button
+                onClick={() => setIsAutoplayPaused((prev) => !prev)}
+                className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer ml-1"
+                title={isAutoplayPaused ? "Resume Autoplay" : "Pause Autoplay"}
+              >
+                {isAutoplayPaused ? (
+                  <Play className="size-3.5 fill-current" />
+                ) : (
+                  <Pause className="size-3.5 fill-current" />
+                )}
+              </button>
+
+              <div className="h-4 w-px bg-neutral-200/30 dark:bg-neutral-800/50" />
+
+              {[
+                { id: "terminal", label: "Terminal", icon: <Terminal className="size-3.5" /> },
+                { id: "profile", label: "Profile", icon: <Code2 className="size-3.5" /> },
+              ].map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id as "terminal" | "profile");
+                    }}
+                    className={`relative flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer overflow-hidden ${
+                      isActive
+                        ? "text-neutral-950 dark:text-white"
+                        : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-tab-bg"
+                        className="absolute inset-0 bg-neutral-200/50 dark:bg-neutral-800/50 rounded-full -z-10"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      />
+                    )}
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                    
+                    {/* Auto-change indicator: progress line at the bottom of the tab button */}
+                    <ProgressBar
+                      isActive={isActive}
+                      isPaused={isHovered || isAutoplayPaused}
+                      onComplete={() => {
+                        setActiveTab((curr) => (curr === "terminal" ? "profile" : "terminal"));
+                      }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Active Card Container */}
+            <div className="w-full relative min-h-[468px] flex items-start justify-center">
+              <AnimatePresence mode="wait">
+                {activeTab === "terminal" ? (
+                  <motion.div
+                    key="terminal-card"
+                    initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.96 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full flex justify-center"
+                  >
+                    <TerminalCard
+                      coffeeCount={coffeeCount}
+                      onBrew={handleBrew}
+                      showCoffeeMsg={showCoffeeMsg}
+                      coffeeMessage={coffeeMessage}
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="profile-card"
+                    initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.96 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full flex justify-center"
+                  >
+                    <ProfilePhotoCard />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>

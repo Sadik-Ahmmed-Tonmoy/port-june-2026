@@ -235,7 +235,7 @@ export const FeyCards = ({
           </motion.div>
         </div>
       </div>
-  
+
     </>
   );
 };

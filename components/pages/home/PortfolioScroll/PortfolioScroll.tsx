@@ -200,7 +200,7 @@ export default function PortfolioScroll(): JSX.Element {
   };
 
   // Split text into individual letters for animation
-  const nameText = "Sadik Ahmmed";
+  const nameText = "Sadik Ahmmed Tonmoy";
   const letters = nameText.split('');
 
   return (
@@ -418,7 +418,7 @@ export default function PortfolioScroll(): JSX.Element {
               y: useTransform(scrollYProgress, [0.5, 0.7], [20, 0])
             }}
           >
-            <span>&copy; 2026 Sadik Ahmmed. All rights reserved.</span>
+            <span>&copy; 2026 Sadik Ahmmed Tonmoy. All rights reserved.</span>
             <div className="flex gap-4">
               <a href="#" className="hover:text-neutral-300 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-neutral-300 transition-colors">Terms of Use</a>

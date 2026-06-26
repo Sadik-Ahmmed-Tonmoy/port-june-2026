@@ -5,6 +5,7 @@ import AnimatedBeamPipelineShowcase from "@/components/pages/home/AnimatedBeamPi
 import RadarEffectDemo from "@/components/pages/home/RaderEffect/RaderEffect";
 import ScrollTextAnimation from "@/components/pages/home/ScrollTextAnimation/ScrollTextAnimation";
 import { SquigglyTextOut } from "@/components/pages/home/SquigglyText/SquigglyText";
+import TechChip from "@/components/pages/home/TechChip/TechChip";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { ContextProvider } from "@/lib/MyContextProvider";
 import { ReactLenis } from "lenis/react";
@@ -45,7 +46,7 @@ const SECTIONS_CONFIG: SectionData[] = [
       <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-12 lg:px-16 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16">
           <div className="flex-1 w-full flex flex-col justify-center">
             <ScrollTextAnimation />
           </div>
@@ -63,7 +64,8 @@ const SECTIONS_CONFIG: SectionData[] = [
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-center">
-          <SquigglyTextOut />
+          {/* <SquigglyTextOut /> */}
+            <TechChip />
         </div>
       </div>
     ),
