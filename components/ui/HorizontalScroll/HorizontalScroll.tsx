@@ -33,15 +33,28 @@ const SECTIONS_CONFIG: SectionData[] = [
     id: "hero",
     content: (
       <>
-    
-      
+
+
         <AnimatedBeamPipelineShowcase />
 
-        </>
+      </>
     ),
   },
   {
     id: "skills",
+    content: (
+      <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-center">
+          {/* <SquigglyTextOut /> */}
+          <TechChip />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "more",
     content: (
       <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
         {/* Subtle grid background */}
@@ -55,19 +68,9 @@ const SECTIONS_CONFIG: SectionData[] = [
           </div>
         </div>
       </div>
-    ),
-  },
-  {
-    id: "more",
-    content: (
-      <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[length:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] opacity-35 dark:opacity-20 z-0" />
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-center">
-          {/* <SquigglyTextOut /> */}
-            <TechChip />
-        </div>
-      </div>
+
+
+
     ),
   },
 ];
@@ -193,11 +196,10 @@ function SectionDots({ active, total }: { active: number; total: number }) {
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
-          className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
-            i === active
+          className={`h-1.5 rounded-full transition-all duration-500 ease-out ${i === active
               ? "w-5 bg-neutral-900 dark:bg-neutral-50"
               : "w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600"
-          }`}
+            }`}
         />
       ))}
     </div>

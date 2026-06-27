@@ -16,7 +16,7 @@ const GridOverlay = () => (
   />
 );
 
-/** Futuristic 3D Bento Card with mouse tilt and cursor spotlight */
+/** Futuristic Bento Card with clean CSS hover effects */
 const BentoCard = ({
   className,
   title,
@@ -30,71 +30,14 @@ const BentoCard = ({
   accentColor?: string;
   children: React.ReactNode;
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0.5);
-  const y = useMotionValue(0.5);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // Transform values for 3D card tilt
-  const rotateX = useSpring(useTransform(y, [0, 1], [6, -6]), { stiffness: 120, damping: 25 });
-  const rotateY = useSpring(useTransform(x, [0, 1], [-6, 6]), { stiffness: 120, damping: 25 });
-  
-  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    
-    // Normalize coordinates from 0 to 1
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    x.set(mouseX / width);
-    y.set(mouseY / height);
-
-    // Spotlight positions inside card
-    setSpotlightPos({ x: mouseX, y: mouseY });
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    x.set(0.5);
-    y.set(0.5);
-  };
-
-  const spotlightGlow = mounted && resolvedTheme === 'light'
-    ? `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 85%)`
-    : `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.035), transparent 85%)`;
-
   return (
     <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
-      style={{
-        rotateX: isHovered ? rotateX : 0,
-        rotateY: isHovered ? rotateY : 0,
-        transformPerspective: '1000px',
-      }}
       className={cn(
-        "relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-700/60 shadow-lg dark:shadow-xl",
+        "relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-700/60 shadow-lg dark:shadow-xl hover:scale-[1.01] hover:shadow-xl dark:hover:shadow-2xl",
         className
       )}
     >
@@ -103,26 +46,10 @@ const BentoCard = ({
         <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-85 dark:opacity-80", accentColor)} />
       )}
 
-      {/* Hover Spotlight Glow */}
-      {isHovered && (
-        <div
-          className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
-          style={{
-            background: spotlightGlow,
-          }}
-        />
-      )}
-
-      {/* Subtle corner glow in the card's backdrop */}
-      <div className={cn(
-        "absolute -bottom-16 -right-16 w-36 rounded-full bg-gradient-to-tr opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 blur-2xl pointer-events-none",
-        accentColor
-      )} />
-
-      {/* Card Header */}
-      <div className="flex items-center gap-3 mb-5 relative z-10">
+      {/* Header Info */}
+      <div className="flex items-center gap-3 mb-4 sm:mb-6">
         {icon && (
-          <div className="p-2.5 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-xl border border-neutral-300 dark:border-neutral-750 text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:scale-105 group-hover:border-neutral-400 dark:group-hover:border-neutral-700 transition-all duration-300">
+          <div className="p-2.5 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-xl border border-neutral-300 dark:border-neutral-750 text-neutral-550 dark:text-neutral-450 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:scale-105 group-hover:border-neutral-400 dark:group-hover:border-neutral-700 transition-all duration-300">
             {icon}
           </div>
         )}

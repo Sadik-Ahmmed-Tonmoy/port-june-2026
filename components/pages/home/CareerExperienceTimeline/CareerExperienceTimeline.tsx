@@ -128,79 +128,12 @@ const TypeBadge = ({ type }: { type: 'education' | 'training' | 'work' }) => {
   );
 };
 
-/** Futuristic 3D Card with mouse tilt and light spotlight */
+/** Bento-style Card with clean CSS hover transitions */
 const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; color: string; isLeft: boolean }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0.5);
-  const y = useMotionValue(0.5);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // Transform values for 3D card tilt
-  const rotateX = useSpring(useTransform(y, [0, 1], [10, -10]), { stiffness: 120, damping: 25 });
-  const rotateY = useSpring(useTransform(x, [0, 1], [-10, 10]), { stiffness: 120, damping: 25 });
-  
-  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    
-    // Normalize coordinates from 0 to 1
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    x.set(mouseX / width);
-    y.set(mouseY / height);
-
-    // Spotlight positions inside card
-    setSpotlightPos({ x: mouseX, y: mouseY });
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    x.set(0.5);
-    y.set(0.5);
-  };
-
-  const spotlightGlow = mounted && resolvedTheme === 'light'
-    ? `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 80%)`
-    : `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`;
-
   return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX: isHovered ? rotateX : 0,
-        rotateY: isHovered ? rotateY : 0,
-        transformPerspective: '1000px',
-      }}
-      className="relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-lg dark:shadow-2xl hover:border-neutral-350 dark:hover:border-neutral-700/60 transition-all duration-300 overflow-hidden"
+    <div
+      className="relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-lg dark:shadow-2xl hover:border-neutral-350 dark:hover:border-neutral-700/60 transition-all duration-300 overflow-hidden hover:scale-[1.01]"
     >
-      {/* Cursor Spotlight Overlay */}
-      {isHovered && (
-        <div
-          className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
-          style={{
-            background: spotlightGlow,
-          }}
-        />
-      )}
-
       {/* Colored Top accent edge */}
       <div className={cn(
         "absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-85",
@@ -215,7 +148,7 @@ const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; colo
       )} />
 
       {children}
-    </motion.div>
+    </div>
   );
 };
  

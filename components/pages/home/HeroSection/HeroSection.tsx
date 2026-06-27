@@ -485,8 +485,8 @@ const ProfilePhotoCard = () => {
     mouseY.set(e.clientY - rect.top - rect.height / 2);
     scale.set(1.02);
   };
-  const resetMouse = () => { 
-    mouseX.set(0); 
+  const resetMouse = () => {
+    mouseX.set(0);
     mouseY.set(0);
     scale.set(1);
   };
@@ -496,11 +496,11 @@ const ProfilePhotoCard = () => {
       ref={cardRef}
       onMouseMove={handleMouse}
       onMouseLeave={resetMouse}
-      style={{ 
-        rotateX, 
-        rotateY, 
+      style={{
+        rotateX,
+        rotateY,
         scale,
-        transformPerspective: "1000px" 
+        transformPerspective: "1000px"
       }}
       className="relative w-full max-w-md h-[468px] rounded-2xl border border-neutral-200/30 dark:border-neutral-800/50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl shadow-2xl overflow-hidden group flex flex-col justify-end"
     >
@@ -531,7 +531,7 @@ const ProfilePhotoCard = () => {
             <MapPin className="size-3.5 text-indigo-400" /> Dhaka, Bangladesh
           </p>
         </div>
-        
+
         <p className="text-xs text-neutral-200 leading-relaxed font-medium">
           Full-stack engineer crafting production-grade products, SaaS webapps, and animated interactive layouts.
         </p>
@@ -939,7 +939,7 @@ export default function HeroSection() {
 
         {/* ─── Right Column: Card with Tab System ──────── */}
         <div className="order-1 lg:order-2 lg:col-span-5 w-full flex justify-center lg:justify-end items-center">
-          <div 
+          <div
             className="w-full max-w-md flex flex-col items-center gap-6"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -972,11 +972,10 @@ export default function HeroSection() {
                     onClick={() => {
                       setActiveTab(tab.id as "terminal" | "profile");
                     }}
-                    className={`relative flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer overflow-hidden ${
-                      isActive
+                    className={`relative flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer overflow-hidden ${isActive
                         ? "text-neutral-950 dark:text-white"
                         : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
-                    }`}
+                      }`}
                   >
                     {isActive && (
                       <motion.div
@@ -987,7 +986,7 @@ export default function HeroSection() {
                     )}
                     {tab.icon}
                     <span>{tab.label}</span>
-                    
+
                     {/* Auto-change indicator: progress line at the bottom of the tab button */}
                     <ProgressBar
                       isActive={isActive}

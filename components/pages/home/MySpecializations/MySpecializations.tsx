@@ -80,86 +80,25 @@ const GridOverlay = () => (
   />
 );
 
-/** 3D Tilt Card with cursor tracking spotlight */
+/** Bento Card with clean CSS hover effects */
 const SpecCard = ({ spec }: { spec: Specialization }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0.5);
-  const y = useMotionValue(0.5);
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Transform values for 3D card tilt
-  const rotateX = useSpring(useTransform(y, [0, 1], [10, -10]), { stiffness: 120, damping: 25 });
-  const rotateY = useSpring(useTransform(x, [0, 1], [-10, 10]), { stiffness: 120, damping: 25 });
-
-  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    
-    // Normalize coordinates from 0 to 1
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    x.set(mouseX / width);
-    y.set(mouseY / height);
-
-    // Spotlight positions inside card
-    setSpotlightPos({ x: mouseX, y: mouseY });
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    x.set(0.5);
-    y.set(0.5);
-  };
-
-  const spotlightGlow = mounted && resolvedTheme === 'light'
-    ? `radial-gradient(circle 200px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 80%)`
-    : `radial-gradient(circle 200px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`;
 
   return (
     <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        rotateX: isHovered ? rotateX : 0,
-        rotateY: isHovered ? rotateY : 0,
-        transformPerspective: '1000px',
         boxShadow: `0 10px 30px -15px ${spec.glowColor}`
       }}
-      className="relative group bg-neutral-100/50 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-750/60 shadow-lg dark:shadow-2xl flex flex-col justify-between min-h-[360px]"
+      className="relative group bg-neutral-100/50 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-750/60 shadow-lg dark:shadow-2xl flex flex-col justify-between min-h-[360px] hover:scale-[1.01]"
     >
       {/* Top Accent Edge */}
       <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-85 dark:opacity-80", spec.accent)} />
-
-      {/* Hover Spotlight Glow */}
-      {isHovered && (
-        <div
-          className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
-          style={{
-            background: spotlightGlow,
-          }}
-        />
-      )}
 
       {/* Subtle corner glow in the card's backdrop */}
       <div className={cn(
@@ -174,7 +113,7 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
         <motion.div 
           variants={spec.iconAnimation}
           animate={isHovered ? 'hover' : 'initial'}
-          className="p-3 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-2xl border border-neutral-300 dark:border-neutral-750 text-neutral-550 dark:text-neutral-400 w-fit"
+          className="p-3 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-2xl border border-neutral-300 dark:border-neutral-750 text-neutral-555 dark:text-neutral-400 w-fit"
         >
           {spec.icon}
         </motion.div>
@@ -185,7 +124,7 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
         </h3>
 
         {/* Description */}
-        <p className="text-xs sm:text-sm text-neutral-650 dark:text-neutral-400 leading-relaxed font-normal">
+        <p className="text-xs sm:text-sm text-neutral-655 dark:text-neutral-450 leading-relaxed font-normal">
           {spec.description}
         </p>
 
@@ -212,7 +151,7 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
 export default function MySpecializations() {
   return (
     <section className="relative w-full py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-200 dark:border-neutral-900">
-      <GridOverlay />
+      {/* <GridOverlay /> */}
 
       <div className="max-w-7xl mx-auto relative z-10">
         

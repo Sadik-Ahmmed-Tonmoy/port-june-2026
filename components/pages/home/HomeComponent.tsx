@@ -20,6 +20,7 @@ import CareerExperienceTimeline from "./CareerExperienceTimeline/CareerExperienc
 import AboutMe from "./AboutMe/AboutMe";
 import MySpecializations from "./MySpecializations/MySpecializations";
 import ScrollText from "./ScrollText/ScrollText";
+import TechnicalSkills from "./TechnicalSkills/TechnicalSkills";
 
 
 
@@ -43,8 +44,9 @@ const HomeComponent = () => {
 
       <HorizontalScroll />
       <HeroParallaxDemo />
-      <PortfolioGlobe />
       <CareerExperienceTimeline />
+    
+      <PortfolioGlobe />
       <PortfolioScroll />
       {/* <RollingText/> */}
 
