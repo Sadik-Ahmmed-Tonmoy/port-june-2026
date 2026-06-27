@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { Code2, Cpu, Database, Sparkles, Server, Terminal, Zap, ShieldAlert } from 'lucide-react';
+import { Code2, Cpu, Database, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 interface Specialization {
@@ -24,7 +25,7 @@ const SPECIALIZATIONS_DATA: Specialization[] = [
     title: 'Full-Stack Web Apps',
     focus: ['Next.js', 'React', 'Node.js', 'TypeScript'],
     description: 'Building modern client-side portals and highly performant server runtimes with modular codebase systems and strict type safety.',
-    icon: <Code2 className="w-6 h-6 text-indigo-400" />,
+    icon: <Code2 className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />,
     accent: 'from-indigo-500 via-purple-500 to-pink-500',
     glowColor: 'rgba(99, 102, 241, 0.15)',
     iconAnimation: {
@@ -36,7 +37,7 @@ const SPECIALIZATIONS_DATA: Specialization[] = [
     title: 'SaaS & Product Architecture',
     focus: ['Authentication', 'RBAC Dashboards', 'API Pipelines'],
     description: 'Designing cloud network layouts, robust multi-role dashboards, automated payment routes, and dynamic transactional SaaS networks.',
-    icon: <Cpu className="w-6 h-6 text-orange-400" />,
+    icon: <Cpu className="w-6 h-6 text-orange-500 dark:text-orange-400" />,
     accent: 'from-orange-500 via-red-500 to-rose-600',
     glowColor: 'rgba(249, 115, 22, 0.15)',
     iconAnimation: {
@@ -48,7 +49,7 @@ const SPECIALIZATIONS_DATA: Specialization[] = [
     title: 'Database & Performance Caching',
     focus: ['Prisma / ORM', 'PostgreSQL / Mongo', 'Redis Caching'],
     description: 'Optimizing index patterns, restructuring schemas, scaling backend queries, and deploying Redis caching layers for sub-100ms response times.',
-    icon: <Database className="w-6 h-6 text-emerald-400" />,
+    icon: <Database className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />,
     accent: 'from-emerald-500 via-teal-500 to-cyan-600',
     glowColor: 'rgba(16, 185, 129, 0.15)',
     iconAnimation: {
@@ -60,7 +61,7 @@ const SPECIALIZATIONS_DATA: Specialization[] = [
     title: 'Interactive UI/UX & Motion',
     focus: ['Framer Motion', 'Micro-interactions', 'Glassmorphism'],
     description: 'Engineering responsive CSS grids, spring-based component transitions, pointer-glow spotlights, and animations that make layouts feel alive.',
-    icon: <Sparkles className="w-6 h-6 text-cyan-400" />,
+    icon: <Sparkles className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />,
     accent: 'from-cyan-500 via-blue-500 to-indigo-600',
     glowColor: 'rgba(56, 189, 248, 0.15)',
     iconAnimation: {
@@ -74,7 +75,7 @@ const SPECIALIZATIONS_DATA: Specialization[] = [
 /** Grid background pattern overlay */
 const GridOverlay = () => (
   <div
-    className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[length:40px_40px] opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
+    className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:40px_40px] opacity-75 dark:opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
     aria-hidden="true"
   />
 );
@@ -84,6 +85,12 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Transform values for 3D card tilt
   const rotateX = useSpring(useTransform(y, [0, 1], [10, -10]), { stiffness: 120, damping: 25 });
@@ -119,6 +126,10 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
     y.set(0.5);
   };
 
+  const spotlightGlow = mounted && resolvedTheme === 'light'
+    ? `radial-gradient(circle 200px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 80%)`
+    : `radial-gradient(circle 200px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`;
+
   return (
     <motion.div
       ref={cardRef}
@@ -135,24 +146,24 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
         transformPerspective: '1000px',
         boxShadow: `0 10px 30px -15px ${spec.glowColor}`
       }}
-      className="relative group bg-neutral-900/35 border border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-750/60 shadow-2xl flex flex-col justify-between min-h-[360px]"
+      className="relative group bg-neutral-100/50 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-750/60 shadow-lg dark:shadow-2xl flex flex-col justify-between min-h-[360px]"
     >
       {/* Top Accent Edge */}
-      <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-80", spec.accent)} />
+      <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-85 dark:opacity-80", spec.accent)} />
 
       {/* Hover Spotlight Glow */}
       {isHovered && (
         <div
           className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
           style={{
-            background: `radial-gradient(circle 200px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`,
+            background: spotlightGlow,
           }}
         />
       )}
 
       {/* Subtle corner glow in the card's backdrop */}
       <div className={cn(
-        "absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-gradient-to-tr opacity-[0.04] transition-opacity duration-500 blur-xl pointer-events-none",
+        "absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-gradient-to-tr opacity-[0.05] dark:opacity-[0.04] transition-opacity duration-500 blur-xl pointer-events-none",
         spec.accent
       )} />
 
@@ -163,29 +174,29 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
         <motion.div 
           variants={spec.iconAnimation}
           animate={isHovered ? 'hover' : 'initial'}
-          className="p-3 bg-neutral-850/80 rounded-2xl border border-neutral-750 text-neutral-400 w-fit"
+          className="p-3 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-2xl border border-neutral-300 dark:border-neutral-750 text-neutral-550 dark:text-neutral-400 w-fit"
         >
           {spec.icon}
         </motion.div>
 
         {/* Title */}
-        <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight leading-tight group-hover:text-indigo-200 transition-colors duration-300">
+        <h3 className="text-lg sm:text-xl font-extrabold text-neutral-900 dark:text-white tracking-tight leading-tight group-hover:text-indigo-650 dark:group-hover:text-indigo-200 transition-colors duration-300">
           {spec.title}
         </h3>
 
         {/* Description */}
-        <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-normal">
+        <p className="text-xs sm:text-sm text-neutral-650 dark:text-neutral-400 leading-relaxed font-normal">
           {spec.description}
         </p>
 
       </div>
 
       {/* Bottom: Focus items list */}
-      <div className="relative z-10 pt-5 mt-5 border-t border-neutral-800/80 flex flex-wrap gap-1.5">
+      <div className="relative z-10 pt-5 mt-5 border-t border-neutral-250 dark:border-neutral-800/80 flex flex-wrap gap-1.5">
         {spec.focus.map((item) => (
           <span
             key={item}
-            className="text-[9px] font-mono font-semibold bg-white/5 border border-white/5 px-2.5 py-0.5 rounded text-neutral-400 hover:text-white transition-colors duration-250"
+            className="text-[9px] font-mono font-semibold bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 px-2.5 py-0.5 rounded text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors duration-250"
           >
             {item}
           </span>
@@ -200,7 +211,7 @@ const SpecCard = ({ spec }: { spec: Specialization }) => {
 
 export default function MySpecializations() {
   return (
-    <section className="relative w-full bg-black text-white py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-900">
+    <section className="relative w-full py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-200 dark:border-neutral-900">
       <GridOverlay />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -211,7 +222,7 @@ export default function MySpecializations() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-bold tracking-[0.25em] text-indigo-400 uppercase"
+            className="text-xs font-bold tracking-[0.25em] text-indigo-650 dark:text-indigo-400 uppercase"
           >
             Areas of Expertise
           </motion.span>
@@ -220,7 +231,7 @@ export default function MySpecializations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-white leading-tight"
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-neutral-900 dark:text-white leading-tight"
           >
             My Specializations
           </motion.h2>
@@ -229,7 +240,7 @@ export default function MySpecializations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-neutral-400 font-normal leading-relaxed mt-4"
+            className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-normal leading-relaxed mt-4"
           >
             Key developer domains where I deliver robust, scalable, and optimized software solutions.
           </motion.p>

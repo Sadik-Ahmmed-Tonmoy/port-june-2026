@@ -8,6 +8,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUp, Code, Database, Server, Zap, Users, Rocket, GitBranch } from 'lucide-react';
 import { useRef } from 'react';
 import perfectoHome from '@/assets/images/perfecto_home.png';
+import { useTheme } from 'next-themes';
+import MySpecializations from '../MySpecializations/MySpecializations';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 interface SectionData {
@@ -37,45 +39,37 @@ interface ProjectItem {
 const SECTIONS: SectionData[] = [
   {
     id: 'intro',
-    bg: 'bg-slate-950',
-    textColor: 'text-white',
-    title: (
-      <>
-        Full‑Stack Developer <br />
-        <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-          Next.js · Node.js · TypeScript
-        </span>
-      </>
-    ),
-    subTitle: 'Scroll to explore my work 👇',
+    bg: 'bg-neutral-50 dark:bg-slate-950',
+    textColor: 'text-neutral-900 dark:text-white',
+    title: <MySpecializations />,
   },
   {
     id: 'stats',
-    bg: 'bg-neutral-300',
-    textColor: 'text-black',
+    bg: 'bg-neutral-200 dark:bg-neutral-900',
+    textColor: 'text-neutral-900 dark:text-white',
     title: (
       <>
-        <TextAnimation text="3+ years of experience" lineAnime classname="inline-block" />
+        <TextAnimation text="3+ years of experience" lineAnime classname="inline-block text-3xl sm:text-5xl lg:text-7xl" />
         <br />
-        <TextAnimation text="20+ production apps shipped" lineAnime direction="right" classname="inline-block" />
+        <TextAnimation text="20+ production apps shipped" lineAnime direction="right" classname="inline-block text-3xl sm:text-5xl lg:text-7xl" />
         <br />
-        <TextAnimation text="1.2M+ database queries optimized" lineAnime classname="inline-block text-sm" />
+        <TextAnimation text="1.2M+ database queries optimized" lineAnime classname="inline-block text-sm sm:text-lg" />
       </>
     ),
   },
   {
     id: 'projects-highlight',
-    bg: 'bg-slate-950',
-    textColor: 'text-white',
+    bg: 'bg-neutral-50 dark:bg-slate-950',
+    textColor: 'text-neutral-900 dark:text-white',
     title: (
       <>
         <TextAnimation
           text="KnockMyRide · PerfectoBD · Primely Gaming"
           letterAnime
-          classname="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
+          classname="text-transparent bg-clip-text bg-gradient-to-r from-indigo-550 via-purple-550 to-pink-550 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 text-2xl sm:text-4xl lg:text-6xl"
         />
         <br />
-        <span className="text-3xl text-neutral-400">real‑world projects with real impact</span>
+        <span className="text-xl sm:text-3xl text-neutral-600 dark:text-neutral-400 block mt-2">real‑world projects with real impact</span>
       </>
     ),
   },
@@ -95,20 +89,20 @@ const TECH_STACK: TechItem[] = [
 ];
 
 const PROJECTS: ProjectItem[] = [
-  { 
-    title: 'KnockMyRide', 
+  {
+    title: 'KnockMyRide',
     image: 'https://i.ibb.co.com/kgRd6hG7/Gemini-Generated-Image-9hg43s9hg43s9hg4.png',
     description: "Bangladesh's first smart QR sticker system for instant vehicle owner contact",
     tech: ['Next.js', 'Node.js', 'MongoDB', 'Prisma', 'Redis', 'Sharp']
   },
-  { 
-    title: 'PerfectoBD', 
+  {
+    title: 'PerfectoBD',
     image: perfectoHome.src,
     description: 'Full-stack e-commerce platform with admin dashboard and real-time inventory',
     tech: ['React', 'Firebase', 'Redux', 'RTK Query', 'Tailwind CSS', 'AntD']
   },
-  { 
-    title: 'Primely Gaming', 
+  {
+    title: 'Primely Gaming',
     image: 'https://images.unsplash.com/photo-1685904042960-66242a0ac352?w=500&auto=format&fit=crop',
     description: 'Online tournament platform with brackets, player registration, and live results',
     tech: ['React', 'Redux', 'Tailwind CSS', 'Swiper.js', 'Framer Motion']
@@ -121,7 +115,7 @@ const PROJECTS: ProjectItem[] = [
 const GridOverlay = ({ className }: { className?: string }) => (
   <div
     className={cn(
-      'absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[length:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]',
+      'absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[length:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]',
       className
     )}
     aria-hidden="true"
@@ -146,20 +140,20 @@ const StickySection = ({
     )}
   >
     <GridOverlay />
-    <div className="px-4 sm:px-8 text-center max-w-5xl mx-auto">
-      <div className="text-3xl sm:text-5xl lg:text-7xl font-semibold leading-[110%] tracking-tight">
+    <div className="px-4 sm:px-8 text-center mx-auto">
+      <div className="leading-[110%] tracking-tight font-semibold">
         {title}
       </div>
-      {subTitle && <p className="mt-4 text-base sm:text-lg text-neutral-400">{subTitle}</p>}
+      {subTitle && <p className="mt-4 text-base sm:text-lg text-neutral-500 dark:text-neutral-400">{subTitle}</p>}
       {stats && (
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 max-w-3xl mx-auto">
           {stats.map((stat, i) => (
-            <div key={i} className="bg-white/5 dark:bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border border-white/10">
-              <div className="flex items-center justify-center gap-2 text-indigo-400">
+            <div key={i} className="bg-neutral-200/50 dark:bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 backdrop-blur-sm border border-neutral-300 dark:border-white/10">
+              <div className="flex items-center justify-center gap-2 text-indigo-650 dark:text-indigo-400">
                 {stat.icon}
                 <span className="text-xl sm:text-2xl font-bold">{stat.value}</span>
               </div>
-              <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">{stat.label}</p>
+              <p className="text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400 mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -169,24 +163,32 @@ const StickySection = ({
 );
 
 /** Tech stack card with skew */
-const TechCard = ({ name, src, skew, invert }: TechItem) => (
-  <figure
-    className={cn(
-      'grid place-content-center p-4 sm:p-6 hover:scale-105 transition-transform duration-300',
-      skew === 'left' ? '-skew-x-12' : 'skew-x-12'
-    )}
-  >
-    <img
-      src={src}
-      alt={name}
-      className={cn('h-20 w-20 sm:h-32 sm:w-32 object-contain', invert && 'invert')}
-      loading="lazy"
-    />
-    <figcaption className="text-xs sm:text-sm text-neutral-400 mt-2 text-center font-mono">
-      {name}
-    </figcaption>
-  </figure>
-);
+const TechCard = ({ name, src, skew, invert }: TechItem) => {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const shouldInvert = invert && mounted && resolvedTheme === 'dark';
+
+  return (
+    <figure
+      className={cn(
+        'grid place-content-center p-4 sm:p-6 hover:scale-105 transition-transform duration-300',
+        skew === 'left' ? '-skew-x-12' : 'skew-x-12'
+      )}
+    >
+      <img
+        src={src}
+        alt={name}
+        className={cn('h-20 w-20 sm:h-32 sm:w-32 object-contain transition-all duration-300', shouldInvert && 'invert')}
+        loading="lazy"
+      />
+      <figcaption className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-2 text-center font-mono">
+        {name}
+      </figcaption>
+    </figure>
+  );
+};
 
 // ─── Main Component ────────────────────────────────────────────────────
 
@@ -202,22 +204,22 @@ export default function PortfolioScroll(): JSX.Element {
 
   // Letter spacing: spreads out when scrolling in, centers when in view, spreads out when scrolling out
   const footerLetterSpacing = useTransform(
-    scrollYProgress, 
-    [0, 0.15, 0.4, 0.6, 0.85, 1], 
+    scrollYProgress,
+    [0, 0.15, 0.4, 0.6, 0.85, 1],
     ['2em', '0.8em', '0.05em', '0.05em', '0.8em', '2em']
   );
 
   // Y position: letters come from sides to center
   const footerTextY = useTransform(
-    scrollYProgress, 
-    [0, 0.3, 0.5, 0.7, 1], 
+    scrollYProgress,
+    [0, 0.3, 0.5, 0.7, 1],
     [100, 30, 0, -30, -100]
   );
 
   // Opacity: fade in and out
   const footerTextOpacity = useTransform(
-    scrollYProgress, 
-    [0, 0.15, 0.4, 0.7, 0.85, 1], 
+    scrollYProgress,
+    [0, 0.15, 0.4, 0.7, 0.85, 1],
     [0, 0.3, 1, 1, 0.3, 0]
   );
 
@@ -240,7 +242,7 @@ export default function PortfolioScroll(): JSX.Element {
     const rect = footerRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     // Update spotlight effect
     setFooterGridBg(`radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.03) 0%, transparent 60%)`);
   };
@@ -259,7 +261,7 @@ export default function PortfolioScroll(): JSX.Element {
 
   return (
     <ReactLenis root>
-      <main className="bg-black max-w- mx-auto">
+      <main className="bg-black w-full mx-auto">
         {/* ── Sticky sections ── */}
         {SECTIONS.map((section) => (
           <StickySection key={section.id} {...section} />
@@ -341,7 +343,7 @@ export default function PortfolioScroll(): JSX.Element {
           />
 
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-end relative z-10">
-            <motion.div 
+            <motion.div
               className="md:col-span-7 flex flex-col items-start gap-3 md:gap-4"
               style={{
                 opacity: useTransform(scrollYProgress, [0, 0.2, 0.5, 1], [0, 0.5, 1, 1]),
@@ -390,7 +392,7 @@ export default function PortfolioScroll(): JSX.Element {
               </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="md:col-span-5 flex flex-col md:items-end gap-4 sm:gap-6 text-xs sm:text-sm text-neutral-400 font-normal"
               style={{
                 opacity: useTransform(scrollYProgress, [0, 0.3, 0.5, 1], [0, 0.3, 1, 1]),
@@ -510,7 +512,7 @@ export default function PortfolioScroll(): JSX.Element {
           </div>
 
           {/* Footer Sub-bar */}
-          <motion.div 
+          <motion.div
             className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-16 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-8 border-t border-neutral-900 text-[10px] sm:text-xs text-neutral-500 z-10"
             style={{
               opacity: useTransform(scrollYProgress, [0.5, 0.7, 1], [0, 0.5, 1]),

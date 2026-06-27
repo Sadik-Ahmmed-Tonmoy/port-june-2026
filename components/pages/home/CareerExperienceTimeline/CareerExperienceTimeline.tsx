@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
-import { Calendar, Award, BookOpen, Briefcase, MapPin } from 'lucide-react';
+import { Calendar, Award, BookOpen, Briefcase } from 'lucide-react';
 import { FaUserGraduate, FaReact, FaLaptopCode } from 'react-icons/fa6';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 export interface TimelineItemType {
@@ -78,14 +79,14 @@ const TIMELINE_DATA: TimelineItemType[] = [
 /** Grid background pattern overlay */
 const GridOverlay = () => (
   <div
-    className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[length:40px_40px] opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
+    className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:40px_40px] opacity-75 dark:opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
     aria-hidden="true"
   />
 );
 
 /** Hexagonal Node with Pulsing Effect */
 const HexNode = ({ icon, color }: { icon: React.ReactNode; color: string }) => (
-  <div className="relative w-12 h-12 flex items-center justify-center">
+  <div className="relative w-12 h-12 flex items-center justify-center group">
     {/* Glowing background ring */}
     <div className={cn("absolute inset-0 bg-gradient-to-tr rounded-xl rotate-45 scale-75 opacity-20 blur-sm", color)} />
     
@@ -99,11 +100,11 @@ const HexNode = ({ icon, color }: { icon: React.ReactNode; color: string }) => (
       <polygon points="50,3 93,25 93,75 50,97 7,75 7,25" strokeDasharray="10 5" />
     </motion.svg>
 
-    <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full fill-slate-950 stroke-neutral-700 stroke-2 group-hover:stroke-indigo-400 transition-colors duration-300">
+    <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full fill-white dark:fill-slate-950 stroke-neutral-300 dark:stroke-neutral-700 group-hover:stroke-indigo-600 dark:group-hover:stroke-indigo-400 transition-colors duration-300">
       <polygon points="50,3 93,25 93,75 50,97 7,75 7,25" />
     </svg>
     
-    <div className="relative z-10 text-white">
+    <div className="relative z-10 text-neutral-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
       {icon}
     </div>
   </div>
@@ -112,9 +113,9 @@ const HexNode = ({ icon, color }: { icon: React.ReactNode; color: string }) => (
 /** Type badge container */
 const TypeBadge = ({ type }: { type: 'education' | 'training' | 'work' }) => {
   const styles = {
-    education: { label: 'Education', icon: <BookOpen className="w-3 h-3 text-purple-400" />, bg: 'bg-purple-950/40 text-purple-300 border-purple-800/30' },
-    training: { label: 'Training', icon: <Award className="w-3 h-3 text-emerald-400" />, bg: 'bg-emerald-950/40 text-emerald-300 border-emerald-800/30' },
-    work: { label: 'Work Experience', icon: <Briefcase className="w-3 h-3 text-sky-400" />, bg: 'bg-sky-950/40 text-sky-300 border-sky-800/30' },
+    education: { label: 'Education', icon: <BookOpen className="w-3 h-3 text-purple-600 dark:text-purple-400" />, bg: 'bg-purple-100/50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/30' },
+    training: { label: 'Training', icon: <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />, bg: 'bg-emerald-100/50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/30' },
+    work: { label: 'Work Experience', icon: <Briefcase className="w-3 h-3 text-sky-655 dark:text-sky-400" />, bg: 'bg-sky-100/50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800/30' },
   };
 
   const current = styles[type];
@@ -132,6 +133,12 @@ const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; colo
   const cardRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Transform values for 3D card tilt
   const rotateX = useSpring(useTransform(y, [0, 1], [10, -10]), { stiffness: 120, damping: 25 });
@@ -167,6 +174,10 @@ const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; colo
     y.set(0.5);
   };
 
+  const spotlightGlow = mounted && resolvedTheme === 'light'
+    ? `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 80%)`
+    : `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`;
+
   return (
     <motion.div
       ref={cardRef}
@@ -178,14 +189,14 @@ const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; colo
         rotateY: isHovered ? rotateY : 0,
         transformPerspective: '1000px',
       }}
-      className="relative group bg-neutral-900/35 border border-neutral-850 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl hover:border-neutral-700/60 transition-all duration-300 overflow-hidden"
+      className="relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-lg dark:shadow-2xl hover:border-neutral-350 dark:hover:border-neutral-700/60 transition-all duration-300 overflow-hidden"
     >
       {/* Cursor Spotlight Overlay */}
       {isHovered && (
         <div
           className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
           style={{
-            background: `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.03), transparent 80%)`,
+            background: spotlightGlow,
           }}
         />
       )}
@@ -207,7 +218,7 @@ const TiltCard = ({ children, color, isLeft }: { children: React.ReactNode; colo
     </motion.div>
   );
 };
-
+ 
 interface TimelineCardProps {
   entry: TimelineItemType;
   isLeft: boolean;
@@ -241,20 +252,20 @@ const TimelineCard: React.FC<TimelineCardProps> = ({ entry, isLeft }) => {
           <div className="flex flex-col space-y-5 relative z-10">
             
             {/* Top Section: Header details */}
-            <div className="flex flex-col space-y-3 pb-4 border-b border-neutral-800/60">
+            <div className="flex flex-col space-y-3 pb-4 border-b border-neutral-250 dark:border-neutral-800/60">
               
               {/* Type & Date */}
               <div className="flex flex-wrap gap-2 items-center">
                 <TypeBadge type={entry.type} />
-                <span className="flex items-center gap-1 bg-neutral-800/40 border border-neutral-700/50 px-2 py-0.5 rounded text-[10px] font-mono text-neutral-400">
-                  <Calendar className="w-3 h-3 text-indigo-400" />
+                <span className="flex items-center gap-1 bg-neutral-200/50 dark:bg-neutral-800/40 border border-neutral-300 dark:border-neutral-700/50 px-2 py-0.5 rounded text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
+                  <Calendar className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
                   {entry.date}
                 </span>
               </div>
 
               {/* Title & Subtitle */}
               <div>
-                <h3 className="text-base sm:text-lg lg:text-xl font-extrabold text-white tracking-tight leading-tight group-hover:text-indigo-300 transition-colors duration-350">
+                <h3 className="text-base sm:text-lg lg:text-xl font-extrabold text-neutral-900 dark:text-white tracking-tight leading-tight group-hover:text-indigo-650 group-hover:dark:text-indigo-300 transition-colors duration-350">
                   {entry.title}
                 </h3>
                 <h4 className={cn("text-xs sm:text-sm sm:text-base font-bold bg-gradient-to-r bg-clip-text text-transparent mt-1 inline-block", entry.color)}>
@@ -262,7 +273,7 @@ const TimelineCard: React.FC<TimelineCardProps> = ({ entry, isLeft }) => {
                 </h4>
               </div>
 
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">
                 {entry.description}
               </p>
             </div>
@@ -275,20 +286,20 @@ const TimelineCard: React.FC<TimelineCardProps> = ({ entry, isLeft }) => {
                 {entry.details.map((detail, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal"
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-750 dark:text-neutral-300 leading-relaxed font-normal"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 mt-1.5 shrink-0" />
                     <p>{detail}</p>
                   </div>
                 ))}
               </div>
 
               {/* Tech Stack Chips */}
-              <div className="flex flex-wrap gap-1.5 pt-3 border-t border-neutral-800/60">
+              <div className="flex flex-wrap gap-1.5 pt-3 border-t border-neutral-250 dark:border-neutral-800/60">
                 {entry.techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="text-[9px] sm:text-[10px] font-mono font-semibold bg-white/5 border border-white/5 px-2.5 py-0.5 rounded text-neutral-400 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                    className="text-[9px] sm:text-[10px] font-mono font-semibold bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 px-2.5 py-0.5 rounded text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-300 dark:hover:bg-white/10 transition-colors duration-200"
                   >
                     {tech}
                   </span>
@@ -321,7 +332,7 @@ export default function CareerExperienceTimeline() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full bg-slate-950 text-white py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-900"
+      className="relative w-full bg-background text-foreground py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-200 dark:border-neutral-900"
     >
       <GridOverlay />
 
@@ -333,7 +344,7 @@ export default function CareerExperienceTimeline() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-bold tracking-[0.25em] text-indigo-400 uppercase"
+            className="text-xs font-bold tracking-[0.25em] text-indigo-655 dark:text-indigo-400 uppercase"
           >
             My Track Record
           </motion.span>
@@ -342,7 +353,7 @@ export default function CareerExperienceTimeline() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-white leading-tight"
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-neutral-900 dark:text-white leading-tight"
           >
             Career & Education
           </motion.h2>
@@ -351,7 +362,7 @@ export default function CareerExperienceTimeline() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-neutral-400 font-normal leading-relaxed mt-4"
+            className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-normal leading-relaxed mt-4"
           >
             A timeline of my formal academic qualifications, professional trainings, and industrial experiences in full-stack engineering.
           </motion.p>
@@ -361,7 +372,7 @@ export default function CareerExperienceTimeline() {
         <div className="relative max-w-6xl mx-auto flex flex-col items-center">
           
           {/* Main vertical central track background line */}
-          <div className="absolute left-10 lg:left-1/2 top-6 bottom-6 w-px bg-neutral-800 z-10" />
+          <div className="absolute left-10 lg:left-1/2 top-6 bottom-6 w-px bg-neutral-200 dark:bg-neutral-800 z-10" />
 
           {/* Glowing fill line animated on scroll */}
           <motion.div 

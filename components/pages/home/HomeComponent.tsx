@@ -19,6 +19,7 @@ import AnimatedBeamPipelineShowcase from "./AnimatedBeamPipelineShowcase/Animate
 import CareerExperienceTimeline from "./CareerExperienceTimeline/CareerExperienceTimeline";
 import AboutMe from "./AboutMe/AboutMe";
 import MySpecializations from "./MySpecializations/MySpecializations";
+import ScrollText from "./ScrollText/ScrollText";
 
 
 
@@ -26,9 +27,10 @@ const HomeComponent = () => {
   return (
     < >
       <ThemeSwitcher />
-      <HeroSection />
+      <HeroSection />|
+      <ScrollText/>
       <AboutMe />
-      <MySpecializations />
+ 
 
       {/* <LoginWithGoogle /> */}
       {/* <AnimationPage/> */}

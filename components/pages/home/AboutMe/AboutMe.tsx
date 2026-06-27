@@ -4,13 +4,14 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
 import { User, MapPin, Coffee, Music, Code2, Cpu, Globe, Compass, Heart, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 // ─── Sub-components ───────────────────────────────────────────────────
 
 /** Grid background pattern overlay */
 const GridOverlay = () => (
   <div
-    className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[length:40px_40px] opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
+    className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:40px_40px] opacity-75 dark:opacity-15 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
     aria-hidden="true"
   />
 );
@@ -32,6 +33,12 @@ const BentoCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Transform values for 3D card tilt
   const rotateX = useSpring(useTransform(y, [0, 1], [6, -6]), { stiffness: 120, damping: 25 });
@@ -67,6 +74,10 @@ const BentoCard = ({
     y.set(0.5);
   };
 
+  const spotlightGlow = mounted && resolvedTheme === 'light'
+    ? `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(99, 102, 241, 0.06), transparent 85%)`
+    : `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.035), transparent 85%)`;
+
   return (
     <motion.div
       ref={cardRef}
@@ -83,13 +94,13 @@ const BentoCard = ({
         transformPerspective: '1000px',
       }}
       className={cn(
-        "relative group bg-neutral-900/35 border border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-700/60 shadow-xl",
+        "relative group bg-neutral-100/60 dark:bg-neutral-900/35 border border-neutral-200 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-neutral-350 dark:hover:border-neutral-700/60 shadow-lg dark:shadow-xl",
         className
       )}
     >
       {/* Top Accent Edge */}
       {accentColor && (
-        <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-80", accentColor)} />
+        <div className={cn("absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-85 dark:opacity-80", accentColor)} />
       )}
 
       {/* Hover Spotlight Glow */}
@@ -97,25 +108,25 @@ const BentoCard = ({
         <div
           className="absolute pointer-events-none inset-0 transition-opacity duration-300 opacity-100"
           style={{
-            background: `radial-gradient(circle 250px at ${spotlightPos.x}px ${spotlightPos.y}px, rgba(255,255,255,0.035), transparent 85%)`,
+            background: spotlightGlow,
           }}
         />
       )}
 
       {/* Subtle corner glow in the card's backdrop */}
       <div className={cn(
-        "absolute -bottom-16 -right-16 w-36  rounded-full bg-gradient-to-tr opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 blur-2xl pointer-events-none",
+        "absolute -bottom-16 -right-16 w-36 rounded-full bg-gradient-to-tr opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 blur-2xl pointer-events-none",
         accentColor
       )} />
 
       {/* Card Header */}
       <div className="flex items-center gap-3 mb-5 relative z-10">
         {icon && (
-          <div className="p-2.5 bg-neutral-850/80 rounded-xl border border-neutral-750 text-neutral-400 group-hover:text-white group-hover:scale-105 group-hover:border-neutral-700 transition-all duration-300">
+          <div className="p-2.5 bg-neutral-200/50 dark:bg-neutral-850/80 rounded-xl border border-neutral-300 dark:border-neutral-750 text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:scale-105 group-hover:border-neutral-400 dark:group-hover:border-neutral-700 transition-all duration-300">
             {icon}
           </div>
         )}
-        <h3 className="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-indigo-200 transition-colors duration-300">{title}</h3>
+        <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white tracking-tight group-hover:text-indigo-650 dark:group-hover:text-indigo-200 transition-colors duration-300">{title}</h3>
       </div>
 
       {/* Card Content */}
@@ -129,6 +140,7 @@ const BentoCard = ({
 export default function AboutMe() {
   const [activeTab, setActiveTab] = useState<'narrative' | 'approach' | 'mindset'>('narrative');
   const [localTime, setLocalTime] = useState('');
+  const { resolvedTheme } = useTheme();
 
   // Clock updates Asiatic Dhaka Time (GMT+6)
   useEffect(() => {
@@ -212,7 +224,7 @@ export default function AboutMe() {
   };
 
   return (
-    <section className="relative w-full bg-black text-white py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-900">
+    <section className="relative w-full bg-background text-foreground py-20 px-4 sm:px-8 overflow-hidden z-10 border-t border-neutral-200 dark:border-neutral-900">
       <GridOverlay />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -223,7 +235,7 @@ export default function AboutMe() {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-bold tracking-[0.25em] text-indigo-400 uppercase"
+            className="text-xs font-bold tracking-[0.25em] text-indigo-650 dark:text-indigo-400 uppercase"
           >
             Get To Know Me
           </motion.span>
@@ -232,7 +244,7 @@ export default function AboutMe() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-white leading-tight"
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-2 text-neutral-900 dark:text-white leading-tight"
           >
             About Me
           </motion.h2>
@@ -241,7 +253,7 @@ export default function AboutMe() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-neutral-400 font-normal leading-relaxed mt-4"
+            className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-normal leading-relaxed mt-4"
           >
             A look into my background, core development principles, and technical toolbox.
           </motion.p>
@@ -258,21 +270,21 @@ export default function AboutMe() {
             className="md:col-span-2"
           >
             {/* Interactive Tab Headers */}
-            <div className="flex gap-2 mb-6 border-b border-neutral-800/80 pb-3 relative z-20">
+            <div className="flex gap-2 mb-6 border-b border-neutral-250 dark:border-neutral-800/80 pb-3 relative z-20">
               {(['narrative', 'approach', 'mindset'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={cn(
                     "relative px-4 py-1.5 text-xs sm:text-sm font-mono font-medium rounded-lg uppercase transition-colors cursor-pointer",
-                    activeTab === tab ? "text-white font-bold" : "text-neutral-500 hover:text-neutral-300"
+                    activeTab === tab ? "text-neutral-900 dark:text-white font-bold" : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
                   )}
                 >
                   {tab}
                   {activeTab === tab && (
                     <motion.div
                       layoutId="activeAboutTab"
-                      className="absolute inset-0 bg-neutral-850 border border-neutral-750 rounded-lg -z-10 shadow-lg"
+                      className="absolute inset-0 bg-neutral-200 dark:bg-neutral-850 border border-neutral-300 dark:border-neutral-750 rounded-lg -z-10 shadow-sm dark:shadow-lg"
                       transition={{ type: 'spring', stiffness: 350, damping: 28 }}
                     />
                   )}
@@ -288,9 +300,38 @@ export default function AboutMe() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className=""
+                className="space-y-4 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal"
               >
-                {tabContent[activeTab]}
+                {activeTab === 'narrative' && (
+                  <>
+                    <p>
+                      I'm a full-stack developer who loves bridging the gap between clean database schemas and fluid interactive layouts. My journey started in a unique place—studying <strong>Bachelor of Business Administration (BBA)</strong> with a major in <strong>Marketing</strong>. This background gives me a distinct perspective, allowing me to view software not just as syntax, but as tools that drive real user adoption and commercial goals.
+                    </p>
+                    <p>
+                      Since transitioning into software engineering, I have focused heavily on mastering modern web technologies. I specialize in building highly responsive frontends and optimized backends, using the Next.js and Node.js ecosystems.
+                    </p>
+                  </>
+                )}
+                {activeTab === 'approach' && (
+                  <>
+                    <p>
+                      I write code with a strong focus on durability and clean abstractions. Whether it's setting up strict typing in TypeScript, optimizing query indexes in PostgreSQL/Prisma, or designing reusable layout components, I aim for scalable, maintainable architectures.
+                    </p>
+                    <p>
+                      I value collaborative agile environments, complete documentation, and clear communication. For me, clean engineering is about building systems that other developers can understand and build upon easily.
+                    </p>
+                  </>
+                )}
+                {activeTab === 'mindset' && (
+                  <>
+                    <p>
+                      Having a commercial background means I prioritize user experience and performance analytics. I focus on optimizing Core Web Vitals and reducing backend response times because I know they directly impact product growth and user retention.
+                    </p>
+                    <p>
+                      I am obsessed with caching strategies, asset pipeline optimization, and crafting premium micro-interactions that make the product feel extremely responsive and alive.
+                    </p>
+                  </>
+                )}
               </motion.div>
             </AnimatePresence>
           </BentoCard>
@@ -302,10 +343,10 @@ export default function AboutMe() {
             accentColor="from-purple-500 to-indigo-600"
           >
             {/* Spinning background radar graphic */}
-            <div className="absolute -right-6 -bottom-6 w-28  opacity-[0.04] pointer-events-none z-0">
+            <div className="absolute -right-6 -bottom-6 w-28 opacity-[0.05] dark:opacity-[0.04] pointer-events-none z-0">
               <motion.svg
                 viewBox="0 0 100 100"
-                className="w-full h-full stroke-purple-400 fill-none stroke-[1.5px]"
+                className="w-full h-full stroke-purple-600 dark:stroke-purple-400 fill-none stroke-[1.5px]"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
               >
@@ -321,10 +362,10 @@ export default function AboutMe() {
                 whileHover={{ x: 6 }}
                 className="flex items-center gap-3 cursor-default"
               >
-                <MapPin className="w-5 h-5 text-indigo-400 shrink-0 group-hover:scale-110 transition-transform" />
+                <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-wider">Location</p>
-                  <p className="text-sm font-semibold text-white">Dhaka, Bangladesh</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white">Dhaka, Bangladesh</p>
                 </div>
               </motion.div>
 
@@ -332,10 +373,10 @@ export default function AboutMe() {
                 whileHover={{ x: 6 }}
                 className="flex items-center gap-3 cursor-default"
               >
-                <Compass className="w-5 h-5 text-purple-400 shrink-0 group-hover:rotate-45 transition-transform duration-300" />
+                <Compass className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 group-hover:rotate-45 transition-transform duration-300" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-wider">Timezone Sync</p>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white">
                     GMT+6 {localTime ? `(${localTime})` : ''}
                   </p>
                 </div>
@@ -345,10 +386,10 @@ export default function AboutMe() {
                 whileHover={{ x: 6 }}
                 className="flex items-center gap-3 cursor-default"
               >
-                <Heart className="w-5 h-5 text-pink-400 shrink-0 group-hover:scale-110 transition-transform" />
+                <Heart className="w-5 h-5 text-pink-650 dark:text-pink-400 shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-wider">Core Belief</p>
-                  <p className="text-sm font-semibold text-white italic">"Simplicity is the ultimate scaling strategy."</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white italic">"Simplicity is the ultimate scaling strategy."</p>
                 </div>
               </motion.div>
             </div>
@@ -365,30 +406,30 @@ export default function AboutMe() {
                 whileHover={{ x: 6 }}
                 className="flex gap-3 cursor-default"
               >
-                <span className="text-xs font-mono font-bold text-sky-400 border border-sky-900 bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">01</span>
+                <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-900 bg-sky-100/40 dark:bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">01</span>
                 <div>
-                  <p className="text-sm font-semibold text-white group-hover:text-sky-300 transition-colors">User-Centric Architecture</p>
-                  <p className="text-xs text-neutral-450 mt-0.5 leading-relaxed">Creating interfaces that solve human problems effectively.</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-sky-650 dark:group-hover:text-sky-300 transition-colors">User-Centric Architecture</p>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5 leading-relaxed">Creating interfaces that solve human problems effectively.</p>
                 </div>
               </motion.li>
               <motion.li 
                 whileHover={{ x: 6 }}
                 className="flex gap-3 cursor-default"
               >
-                <span className="text-xs font-mono font-bold text-sky-400 border border-sky-900 bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">02</span>
+                <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-900 bg-sky-100/40 dark:bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">02</span>
                 <div>
-                  <p className="text-sm font-semibold text-white group-hover:text-sky-300 transition-colors">Speed & Optimization</p>
-                  <p className="text-xs text-neutral-450 mt-0.5 leading-relaxed">Minimizing overhead, optimizing query speeds, and code performance.</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-sky-650 dark:group-hover:text-sky-300 transition-colors">Speed & Optimization</p>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5 leading-relaxed">Minimizing overhead, optimizing query speeds, and code performance.</p>
                 </div>
               </motion.li>
               <motion.li 
                 whileHover={{ x: 6 }}
                 className="flex gap-3 cursor-default"
               >
-                <span className="text-xs font-mono font-bold text-sky-400 border border-sky-900 bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">03</span>
+                <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-900 bg-sky-100/40 dark:bg-sky-950/40 rounded px-1.5 py-0.5 h-fit shrink-0 group-hover:shadow-[0_0_8px_rgba(56,189,248,0.3)] transition-shadow">03</span>
                 <div>
-                  <p className="text-sm font-semibold text-white group-hover:text-sky-300 transition-colors">Clean Engineering</p>
-                  <p className="text-xs text-neutral-455 mt-0.5 leading-relaxed">Strict typing, scalable folder systems, and complete documentation.</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-sky-650 dark:group-hover:text-sky-300 transition-colors">Clean Engineering</p>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5 leading-relaxed">Strict typing, scalable folder systems, and complete documentation.</p>
                 </div>
               </motion.li>
             </ul>
@@ -401,8 +442,8 @@ export default function AboutMe() {
             accentColor="from-emerald-500 to-teal-600"
             className="md:col-span-2"
           >
-            <div className="flex flex-col h-full justify-between space-y-">
-              <p className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed">
+            <div className="flex flex-col h-full justify-between gap-6">
+              <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed">
                 I pick tools that allow me to deliver production-grade applications rapidly. Here is a breakdown of languages, libraries, and frameworks I use on a daily basis:
               </p>
               
@@ -412,7 +453,7 @@ export default function AboutMe() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="flex flex-wrap gap-2 pb-2 -mt-20"
+                className="flex flex-wrap gap-2 pb-2"
               >
                 {techStack.map((tech) => (
                   <motion.span
@@ -421,10 +462,10 @@ export default function AboutMe() {
                     whileHover={{ 
                       scale: 1.08, 
                       y: -2,
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      borderColor: 'rgba(255, 255, 255, 0.2)'
+                      backgroundColor: resolvedTheme === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)',
+                      borderColor: resolvedTheme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.2)'
                     }}
-                    className="text-xs font-mono font-semibold bg-white/5 border border-white/5 px-3 py-1 rounded-xl text-neutral-300 cursor-default transition-all duration-200"
+                    className="text-xs font-mono font-semibold bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 px-3 py-1 rounded-xl text-neutral-750 dark:text-neutral-300 cursor-default transition-all duration-200"
                   >
                     {tech}
                   </motion.span>
