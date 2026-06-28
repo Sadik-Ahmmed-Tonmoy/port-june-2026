@@ -767,7 +767,7 @@ export default function HeroSection() {
                 transition={{ duration: 0.3 }}
               />
             </span>
-            {" "}— Bangladesh's first QR vehicle contact SaaS.
+            {" "}— Bangladesh&apos;s first QR vehicle contact SaaS.
             I craft production-grade systems with modern technologies, from Prisma schema to animated UI.
           </motion.p>
 
