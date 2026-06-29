@@ -64,7 +64,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 // ─── Floating Particles Component ────────────────────────────────────────────
-const FloatingParticles = () => {
+const FloatingParticles = React.memo(() => {
   const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
@@ -102,10 +102,11 @@ const FloatingParticles = () => {
       ))}
     </div>
   );
-};
+});
+FloatingParticles.displayName = "FloatingParticles";
 
 // ─── Floating Shapes Component ──────────────────────────────────────────────
-const FloatingShapes = () => {
+const FloatingShapes = React.memo(() => {
   const shapes = [
     { Icon: Star, color: "text-yellow-500/20", size: 20, x: 10, y: 20, duration: 15 },
     { Icon: Square, color: "text-blue-500/20", size: 16, x: 85, y: 30, duration: 18 },
@@ -140,7 +141,8 @@ const FloatingShapes = () => {
       ))}
     </div>
   );
-};
+});
+FloatingShapes.displayName = "FloatingShapes";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -609,21 +611,23 @@ export default function HeroSection() {
   });
   const [coffeeMessage, setCoffeeMessage] = useState("");
   const [showCoffeeMsg, setShowCoffeeMsg] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
   const [activeTab, setActiveTab] = useState<"terminal" | "profile">("profile");
   const [isHovered, setIsHovered] = useState(false);
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
 
   // Persist coffee across sessions (writes happen on brew)
 
-  // Mouse tracking for cursor glow
+  // Mouse tracking for cursor glow (replaces state updates to prevent re-renders)
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      mouseX.set(e.clientX - 250);
+      mouseY.set(e.clientY - 250);
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   const handleBrew = () => {
     const next = coffeeCount + 1;
@@ -652,8 +656,8 @@ export default function HeroSection() {
         className="fixed pointer-events-none z-40 w-[500px] h-[500px] rounded-full blur-3xl opacity-20"
         style={{
           background: 'radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)',
-          left: mousePosition.x - 250,
-          top: mousePosition.y - 250,
+          x: mouseX,
+          y: mouseY,
         }}
       />
 
